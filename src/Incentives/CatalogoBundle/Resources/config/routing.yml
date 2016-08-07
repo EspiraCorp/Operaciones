@@ -1,0 +1,315 @@
+producto:
+    pattern:  /producto
+    defaults: { _controller: IncentivesCatalogoBundle:Producto:listado}
+
+producto_listadouniversal:
+    pattern:  /producto/listadouniversal
+    defaults: { _controller: IncentivesCatalogoBundle:Producto:listadouniversal }
+
+producto_nuevo:
+    pattern:  /producto/nuevo
+    defaults: { _controller: IncentivesCatalogoBundle:Producto:nuevo}
+
+producto_editar:
+    pattern:  /producto/editar/{id}
+    defaults: { _controller: IncentivesCatalogoBundle:Producto:editar, id: null }
+    requirements:
+        id:  \d+
+
+producto_datos:
+    pattern:  /producto/datos/{id}
+    defaults: { _controller: IncentivesCatalogoBundle:Producto:datos, id: null }
+    requirements:
+        id:  \d+
+
+producto_estado:
+    pattern:  /producto/estado/{id}
+    defaults: { _controller: IncentivesCatalogoBundle:Producto:estado, id: null }
+    requirements:
+        id:  \d+
+
+producto_agregarimagen:
+    pattern:  /producto/imagen/agregar/{id}
+    defaults: { _controller: IncentivesCatalogoBundle:Producto:cargaImagen, id: null }
+    requirements:
+        id:  \d+
+
+producto_estadoimagen:
+    pattern:  /producto/imagen/estado/{id}
+    defaults: { _controller: IncentivesCatalogoBundle:Producto:estadoImagen, id: null }
+    requirements:
+        id:  \d+
+
+producto_imagenmasivo:
+    pattern:  /producto/imagen/masivo
+    defaults: { _controller: IncentivesCatalogoBundle:Producto:masivoImagen }
+
+producto_agregarprecio:
+    pattern:  /producto/precio/agregar/{id}
+    defaults: { _controller: IncentivesCatalogoBundle:Producto:agregarPrecio, id: null }
+    requirements:
+        id:  \d+
+
+producto_estadoprecio:
+    pattern:  /producto/precio/estado/{id}
+    defaults: { _controller: IncentivesCatalogoBundle:Producto:estadoPrecio, id: null }
+    requirements:
+        id:  \d+
+
+producto_estadopremio:
+    pattern:  /producto/premio/estado/{id}
+    defaults: { _controller: IncentivesCatalogoBundle:Maestro:estadoPremio, id: null }
+    requirements:
+        id:  \d+        
+
+producto_editarprecio:
+    pattern:  /producto/precio/editar/{id}
+    defaults: { _controller: IncentivesCatalogoBundle:Producto:editarPrecio, id: null }
+    requirements:
+        id:  \d+
+
+producto_catalogoproductoo:
+    pattern:  /producto/catalogoproducto/{id}
+    defaults: { _controller: IncentivesCatalogoBundle:Producto:catalogoproducto, id: null }
+    
+producto_buscar:
+    pattern:  /producto/buscar
+    defaults: { _controller: IncentivesCatalogoBundle:Producto:buscar}
+
+cliente:
+    pattern:  /cliente
+    defaults: { _controller: IncentivesCatalogoBundle:Cliente:listado}
+
+cliente_nuevo:
+    pattern:  /cliente/nuevo
+    defaults: { _controller: IncentivesCatalogoBundle:Cliente:nuevo}
+
+cliente_editar:
+    pattern:  /cliente/editar/{id}
+    defaults: { _controller: IncentivesCatalogoBundle:Cliente:editar, id: null }
+    requirements:
+        id:  \d+
+
+cliente_datos:
+    pattern:  /cliente/datos/{id}
+    defaults: { _controller: IncentivesCatalogoBundle:Cliente:datos, id: null }
+    requirements:
+        id:  \d+
+
+cliente_estado:
+    pattern:  /ciente/estado/{id}
+    defaults: { _controller: IncentivesCatalogoBundle:Cliente:estado, id: null }
+    requirements:
+        id:  \d+
+
+programa:
+    pattern:  /programa
+    defaults: { _controller: IncentivesCatalogoBundle:Programa:listado}
+
+programa_nuevo:
+    pattern:  /programa/nuevo/{id}
+    defaults: { _controller: IncentivesCatalogoBundle:Programa:nuevo, id: null}
+
+programa_editar:
+    pattern:  /programa/editar/{id}
+    defaults: { _controller: IncentivesCatalogoBundle:Programa:editar, id: null }
+    requirements:
+        id:  \d+
+
+programa_datos:
+    pattern:  /programa/datos/{id}
+    defaults: { _controller: IncentivesCatalogoBundle:Programa:datos, id: null }
+    requirements:
+        id:  \d+
+
+programa_estado:
+    pattern:  /programa/estado/{id}
+    defaults: { _controller: IncentivesCatalogoBundle:Programa:estado, id: null }
+    requirements:
+        id:  \d+
+
+catalogo:
+    pattern:  /catalogo
+    defaults: { _controller: IncentivesCatalogoBundle:Catalogos:listado}
+
+catalogo_nuevo:
+    pattern:  /catalogo/nuevo/{id}
+    defaults: { _controller: IncentivesCatalogoBundle:Catalogos:nuevo, id: null}
+
+catalogo_editar:
+    pattern:  /catalogo/editar/{id}
+    defaults: { _controller: IncentivesCatalogoBundle:Catalogos:editar, id: null }
+    requirements:
+        id:  \d+
+
+catalogo_datos:
+    pattern:  /catalogo/datos/{id}
+    defaults: { _controller: IncentivesCatalogoBundle:Catalogos:datos, id: null }
+    requirements:
+        id:  \d+
+
+catalogo_estado:
+    pattern:  /catalogo/estado/{id}
+    defaults: { _controller: IncentivesCatalogoBundle:Catalogos:estado, id: null }
+    requirements:
+        id:  \d+
+
+catalogo_aprobar:
+    pattern:  /catalogo/aprobar/{id}/{resumido}
+    defaults: { _controller: IncentivesCatalogoBundle:Catalogos:aprobar, id: null, resumido: null }
+    requirements:
+        id:  \d+
+
+catalogo_aprobar_resumido:
+    pattern:  /catalogo/aprobarresumido/{id}
+    defaults: { _controller: IncentivesCatalogoBundle:Catalogos:aprobarresumido, id: null }
+    requirements:
+        id:  \d+
+
+catalogo_galeria:
+    pattern:  /catalogo/galeria/{id}/{vista}
+    defaults: { _controller: IncentivesCatalogoBundle:Catalogos:galeria, id: null, vista: null }
+    requirements:
+        id:  \d+
+
+catalogo_imagenes:
+    pattern:  /catalogo/imagenes/{id}/{productos}
+    defaults: { _controller: IncentivesCatalogoBundle:Catalogos:imagenes, id: null, productos: null }
+    requirements:
+        id:  \d+
+
+productocatalogo_imagenes:
+    pattern:  /productocatalogo/imagenes/{catalogo}
+    defaults: { _controller: IncentivesCatalogoBundle:Catalogos:imagenesCatalogo, catalogo: null}
+    requirements:
+        catalogo:  \d+
+
+catalogo_estadoaprobar:
+    pattern:  /catalogo/aprobarcatalogo/{accion}/{id}/{catalogo}/{resumido}
+    defaults: { _controller: IncentivesCatalogoBundle:Catalogos:aprobarcatalogo, accion: null, id: null, catalogo: null, resumido: null}
+
+catalogo_indicadores:
+    pattern:  /catalogo/indicadores/{id}
+    defaults: { _controller: IncentivesCatalogoBundle:Catalogos:indicadores, id: null }
+    requirements:
+        id:  \d+
+
+catalogo_navegar:
+    pattern:  /catalogo/navegar
+    defaults: { _controller: IncentivesCatalogoBundle:Catalogos:navegar}
+
+productocatalogo_nuevo:
+    pattern:  /productocatalogo/nuevo/{producto}/{catalogo}
+    defaults: { _controller: IncentivesCatalogoBundle:Maestro:nuevo, producto: null, catalogo: null}
+
+productocatalogo_listado:
+    pattern:  /productocatalogo/listado
+    defaults: { _controller: IncentivesCatalogoBundle:Maestro:listado}
+
+producto_importar:
+    pattern:  /producto/importar/
+    defaults: { _controller: IncentivesCatalogoBundle:Producto:importar }
+
+producto_exportar:
+    pattern:  /producto/exportar/
+    defaults: { _controller: IncentivesCatalogoBundle:Producto:exportar }
+
+producto_formato:
+    pattern:  /producto/formato/
+    defaults: { _controller: IncentivesCatalogoBundle:Producto:formato }
+
+productocatalogo_maestro:
+    pattern:  /productocatalogo/maestro
+    defaults: { _controller: IncentivesCatalogoBundle:Maestro:maestro}
+
+productocatalogo_grupo:
+    pattern:  /productocatalogo/grupo/{id}/{pagina}/{str_filtro}/{parametros}
+    defaults: { _controller: IncentivesCatalogoBundle:Maestro:grupo, id: null, pagina: null, str_filtro: null, parametros: null}
+    requirements:
+        id:  \d+
+
+productocatalogo_procesar:
+    pattern:  /productocatalogo/procesar
+    defaults: { _controller: IncentivesCatalogoBundle:Maestro:procesarItem}
+
+productocatalogo_calcular:
+    pattern:  /productocatalogo/calcular
+    defaults: { _controller: IncentivesCatalogoBundle:Maestro:calcularPuntos}
+
+productocatalogo_importar:
+    pattern:  /productocatalogo/importar/{id}
+    defaults: { _controller: IncentivesCatalogoBundle:Maestro:importar}
+    requirements:
+        id:  \d+
+
+productocatalogo_formato:
+    pattern:  /productocatalogo/formato
+    defaults: { _controller: IncentivesCatalogoBundle:Maestro:formato}
+
+productocatalogo_catalogoim:
+    pattern:  /productocatalogo/catalogoim/{id}
+    defaults: { _controller: IncentivesCatalogoBundle:Maestro:formatoimagen}
+
+producto_editar_mas:
+    pattern:  /producto/editarmas/
+    defaults: { _controller: IncentivesCatalogoBundle:Producto:editarmas }
+
+producto_formato_edicion:
+    pattern:  /producto/formatoeditar/
+    defaults: { _controller: IncentivesCatalogoBundle:Producto:formatoeditarmas }
+
+producto_formato_proveedor:
+    pattern:  /producto/formatoproveedor/{id}
+    defaults: { _controller: IncentivesCatalogoBundle:Producto:formatoporproveedor }
+
+productocatalogo_nuevocatalogo:
+    pattern:  /productocatalogo/nuevocatalogo/{producto}
+    defaults: { _controller: IncentivesCatalogoBundle:Maestro:nuevocatalogo, producto: null }
+
+productocatalogo_nuevopremio:
+    pattern:  /productocatalogo/nuevopremio/{producto}/{catalogo}
+    defaults: { _controller: IncentivesCatalogoBundle:Maestro:nuevoPremio, producto: null, catalogo: null }
+
+productocatalogo_editarpremio:
+    pattern:  /productocatalogo/editarpremio/{id}
+    defaults: { _controller: IncentivesCatalogoBundle:Maestro:editarPremio, id: null }
+
+productocatalogo_estadopremio:
+    pattern:  /productocatalogo/estadopremio/{id}
+    defaults: { _controller: IncentivesCatalogoBundle:Maestro:estadoPremioMaestro, id: null }
+    requirements:
+        id:  \d+ 
+
+productomaestro_estado:
+    pattern:  /productomaestro/estado/{id}
+    defaults: { _controller: IncentivesCatalogoBundle:Producto:estadoMaestro, id: null }
+    requirements:
+        id:  \d+
+
+productocatalogo_editarcatalogo:
+    pattern:  /productocatalogo/editarcatalogo/{productocatalogo}
+    defaults: { _controller: IncentivesCatalogoBundle:Maestro:editarcatalogo, productocatalogo: null }
+
+catalogo_intervalos:
+    pattern:  /catalogo/intervalos/{id}
+    defaults: { _controller: IncentivesCatalogoBundle:Catalogos:intervalos, id: null}
+    
+catalogo_intervaloseditar:
+    pattern:  /catalogo/intervaloseditar/{id}
+    defaults: { _controller: IncentivesCatalogoBundle:Catalogos:editarntervalos, id: null}
+
+catalogo_realcular:
+    pattern:  /catalogo/recalcular/{id}
+    defaults: { _controller: IncentivesCatalogoBundle:Maestro:recalcularCatalogo, id: null}
+
+producto_referencia:
+    pattern:  /producto/referencia/{id}
+    defaults: { _controller: IncentivesCatalogoBundle:Producto:productoreferencia, id: null }
+
+productocatalogo_formatocambios:
+    pattern:  /productocatalogo/formatocambios/{id}
+    defaults: { _controller: IncentivesCatalogoBundle:Maestro:formatoCambios, id: null }
+    
+productos_proveedor:
+    pattern:  /proveedores/productos/{id}
+    defaults: { _controller: IncentivesCatalogoBundle:Catalogos:productosproveedor, id: null }

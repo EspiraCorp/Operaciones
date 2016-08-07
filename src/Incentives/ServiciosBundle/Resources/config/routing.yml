@@ -1,0 +1,60 @@
+servicios_productos:
+    pattern:  /servicios/productos
+    defaults: { _controller: IncentivesServiciosBundle:Catalogo:productos }
+
+servicios_categoria:
+    pattern:  /servicios/categorias
+    defaults: { _controller: IncentivesServiciosBundle:Catalogo:categorias }
+
+servicios_calificacion:
+    pattern:  /servicios/calificacion
+    defaults: { _controller: IncentivesServiciosBundle:Catalogo:calificacion }
+
+servicios_inventarioentrada:
+    pattern:  /servicios/inventarioentrada
+    defaults: { _controller: IncentivesServiciosBundle:Inventarios:entrada }
+
+servicios_datoscompra:
+    pattern:  /servicios/datoscompra
+    defaults: { _controller: IncentivesServiciosBundle:Inventarios:datoscompra }
+
+servicios_inventariodespac:
+    pattern:  /servicios/inventariodespacho
+    defaults: { _controller: IncentivesServiciosBundle:Inventarios:salida }
+
+servicios_inventariodevolucion:
+    pattern:  /servicios/inventariodevolucion
+    defaults: { _controller: IncentivesServiciosBundle:Inventarios:devolucion }
+
+servicios_redencionnueva:
+    pattern:  /servicios/redencionnueva
+    defaults: { _controller: IncentivesServiciosBundle:Redenciones:nueva }
+
+servicios_redencionautorizada:
+    pattern:  /servicios/redencionautorizada
+    defaults: { _controller: IncentivesServiciosBundle:Redenciones:autorizada }
+
+servicios_puntosredimidos:
+    pattern:  /servicios/puntosredimidos
+    defaults: { _controller: IncentivesServiciosBundle:Redenciones:puntosredimidos }
+
+servicios_puntosrechazados:
+    pattern:  /servicios/puntosrechazados
+    defaults: { _controller: IncentivesServiciosBundle:Redenciones:puntosrechazados }
+
+servicios_listadopuntosredimidos:
+    pattern:  /servicios/puntosprograma
+    defaults: { _controller: IncentivesServiciosBundle:Redenciones:listadoPuntosRedimidos }
+
+servicios_redencionesparticipante:
+    pattern:  /servicios/redencionesparticipante
+    defaults: { _controller: IncentivesServiciosBundle:Redenciones:redencionesparticipante }
+
+servicios_redencioneslistado:
+    pattern:  /servicios/redencioneslistado
+    defaults: { _controller: IncentivesServiciosBundle:Redenciones:redencioneslistado }
+
+servicios_entregado:
+    pattern:  /servicios/entregado
+    defaults: { _controller: IncentivesServiciosBundle:Redenciones:entregado }
+

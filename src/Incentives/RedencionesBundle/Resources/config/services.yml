@@ -1,0 +1,20 @@
+parameters:
+#    incentives_redenciones.example.class: Incentives\RedencionesBundle\Example
+
+services:
+#    incentives_redenciones.example:
+#        class: %incentives_redenciones.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
+
+services:
+    #...
+    incentives_redenciones:
+        class: Incentives\RedencionesBundle\Model\redencionesFunciones
+        arguments: [@doctrine.orm.entity_manager]
+        
+    incentives_inventario:
+        class: Incentives\InventarioBundle\Model\inventarioFunciones
+        arguments: [@doctrine.orm.entity_manager]
+
+    em:
+        alias: doctrine.orm.entity_manager

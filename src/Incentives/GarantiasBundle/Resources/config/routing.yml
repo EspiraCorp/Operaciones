@@ -1,0 +1,51 @@
+incentives_garantias_homepage:
+    pattern:  /hello/{name}
+    defaults: { _controller: IncentivesGarantiasBundle:Default:index }
+
+garantias_redenciones:
+    pattern:  /garantias/redenciones
+    defaults: { _controller: IncentivesGarantiasBundle:Redenciones:listado}
+
+garantiasredenciones_programa:
+    pattern:  /garantias/redenciones/{programa}
+    defaults: { _controller: IncentivesGarantiasBundle:Redenciones:listadoprograma, programa: null}
+
+garantiasredenciones_datos:
+    pattern:  /garantias/datosredencion/{redencion}
+    defaults: { _controller: IncentivesGarantiasBundle:Redenciones:datosredencion, redencion: null}
+
+garantiasnovedad_nueva:
+    pattern:  /garantias/novedadnueva/{redencion}
+    defaults: { _controller: IncentivesGarantiasBundle:Redenciones:novedad, redencion: null}
+
+garantiasnovedades_listado:
+    pattern:  /garantias/novedadeslistado
+    defaults: { _controller: IncentivesGarantiasBundle:Redenciones:novedadeslistado}
+
+garantiasnovedades_accion:
+    pattern:  /garantias/novedadesaccion/{novedad}
+    defaults: { _controller: IncentivesGarantiasBundle:Redenciones:novedadesaccion, novedad: null}
+
+garantiasrecompras_listado:
+    pattern:  /garantias/recompraslistado
+    defaults: { _controller: IncentivesGarantiasBundle:Redenciones:recompraslistado}
+
+garantiasrecompra_aprobacion:
+    pattern:  /garantias/recompraaprobacion/{novedad}
+    defaults: { _controller: IncentivesGarantiasBundle:Redenciones:aprobacionrecompra, novedad: null}
+
+garantiasrecompra_aprobar:
+    pattern:  /garantias/recompraaprobar/{novedad}
+    defaults: { _controller: IncentivesGarantiasBundle:Redenciones:aprobarrecompra, novedad: null}
+
+garantiasrecompra_cancelar:
+    pattern:  /garantias/recompracancelar/{novedad}
+    defaults: { _controller: IncentivesGarantiasBundle:Redenciones:cancelarrecompra, novedad: null}
+
+garantias_editarenvio:
+    pattern:  /garantias/editarenvio/{redencion}
+    defaults: { _controller: IncentivesGarantiasBundle:Redenciones:envioedicion, redencion: null}
+
+garantias_reenvios:
+    pattern:  /garantias/reenvios
+    defaults: { _controller: IncentivesGarantiasBundle:Redenciones:reenvioslistado }

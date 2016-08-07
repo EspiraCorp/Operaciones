@@ -1,0 +1,7 @@
+acme_prueba_homepage:
+    pattern:  /hello/{name}
+    defaults: { _controller: AcmePruebaBundle:Default:index }
+
+acme_prueba_new:
+    pattern:  /new
+    defaults: { _controller: AcmePruebaBundle:Default:newLocation }

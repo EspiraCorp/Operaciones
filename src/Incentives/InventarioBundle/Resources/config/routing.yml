@@ -1,0 +1,147 @@
+inventario_listado:
+    pattern:  /inventario
+    defaults: { _controller: IncentivesInventarioBundle:Inventario:listado }
+
+planillas_lista:
+    pattern:  /planillas/lista
+    defaults: { _controller: IncentivesInventarioBundle:Inventario:planillas }
+
+planillas_generar:
+    pattern:  /planillas/generar
+    defaults: { _controller: IncentivesInventarioBundle:Inventario:generarplanilla }
+
+planillas_nueva:
+    pattern:  /planillas/nueva
+    defaults: { _controller: IncentivesInventarioBundle:Inventario:nuevaplanilla }
+
+planillas_nueva_solicitud:
+    pattern:  /planillas/nuevasolicitud/{id}
+    defaults: { _controller: IncentivesInventarioBundle:Inventario:planillaSolicitud, id: null }
+
+planillas_datos:
+    pattern:  /planillas/datos/{id}
+    defaults: { _controller: IncentivesInventarioBundle:Inventario:datosplanilla, id: null }
+
+planillas_generarsegmentado:
+    pattern:  /planillas/generarsegmentado
+    defaults: { _controller: IncentivesInventarioBundle:Inventario:planillasegmentado }
+
+planilla_requisicion:
+    pattern:  /planilla/requisicion/{id}
+    defaults: { _controller: IncentivesInventarioBundle:Inventario:planillarequisicion, id: null  }
+
+inventario_historico:
+    pattern:  /inventario/historico/{id}
+    defaults: { _controller: IncentivesInventarioBundle:Inventario:historico, id: null }
+
+inventario_generar_planilla:
+    pattern:  /inventario/planilla/{fecha}
+    defaults: { _controller: IncentivesInventarioBundle:Inventario:planilla, fecha: null  }
+
+inventario_planilla_redencion:
+    pattern:  /inventario/planillaredencion/{fecha}
+    defaults: { _controller: IncentivesInventarioBundle:Inventario:planillaRedencion, fecha: null  }
+
+inventario_listado_planilla:
+    pattern:  /inventario/listado
+    defaults: { _controller: IncentivesInventarioBundle:Inventario:listadoPlanilla }
+
+inventario_listado_planilla_estado:
+    pattern:  /inventario/estadoplanilla/{id}
+    defaults: { _controller: IncentivesInventarioBundle:Inventario:estadoPlanilla, id: null }
+
+inventario_exportar_planilla:
+    pattern:  /inventario/exportar/{fecha}
+    defaults: { _controller: IncentivesInventarioBundle:Inventario:planillaexportar, fecha: null }
+
+inventario_importar_planilla:
+    pattern:  /inventario/importar
+    defaults: { _controller: IncentivesInventarioBundle:Inventario:importar}
+    
+inventario_cargarguias:
+    pattern:  /inventario/cargarguias
+    defaults: { _controller: IncentivesInventarioBundle:Inventario:cargarguias}
+
+inventario_courier_listado:
+    pattern:  /courier
+    defaults: { _controller: IncentivesInventarioBundle:Courier:listado }
+
+inventario_planilla_actualizar:
+    pattern:  /inventario/actualizarplanilla/{id}/{descargar}
+    defaults: { _controller: IncentivesInventarioBundle:Inventario:actualizarplanilla, id: null, descargar: null}
+
+inventario_planilla_cierre:
+    pattern:  /inventario/planillascierre
+    defaults: { _controller: IncentivesInventarioBundle:Inventario:planillasCierre }
+
+inventario_planilla_cierre_detalle:
+    pattern:  /inventario/cierredetalle/{planilla}
+    defaults: { _controller: IncentivesInventarioBundle:Inventario:cierreDetalle, planilla: null }
+
+inventario_planilla_cierre_entrega:
+    pattern:  /inventario/cierreentrega/{id}/{planilla}
+    defaults: { _controller: IncentivesInventarioBundle:Inventario:cierreEntrega, id: null, planilla: null }
+
+inventario_planilla_costos:
+    pattern:  /inventario/costosplanilla/{planilla}
+    defaults: { _controller: IncentivesInventarioBundle:Inventario:costosplanilla, planilla: null }
+
+inventario_courier_nuevo:
+    pattern:  /courier/nuevo
+    defaults: { _controller: IncentivesInventarioBundle:Courier:nuevo }
+
+inventario_courier_correo:
+    pattern:  /courier/correoingreso/{id}
+    defaults: { _controller: IncentivesInventarioBundle:Courier:correoIngreso, id: null  }
+
+inventario_guias:
+    pattern:  /inventario/importar
+    defaults: { _controller: IncentivesInventarioBundle:Inventario:importar}
+
+inventario_entregado:
+    pattern:  /inventario/entregado
+    defaults: { _controller: IncentivesInventarioBundle:Inventario:entregado}
+
+inventario_programas:
+    pattern:  /inventario/programas
+    defaults: { _controller: IncentivesInventarioBundle:Inventario:programas}
+
+inventario_redenciones:
+    pattern:  /inventario/redenciones/{programa}
+    defaults: { _controller: IncentivesInventarioBundle:Inventario:redenciones, programa: null}
+
+inventario_ingreso:
+    pattern:  /inventario/ingreso/{id}
+    defaults: { _controller: IncentivesInventarioBundle:Inventario:ingreso, id: null }
+
+inventario_salida:
+    pattern:  /inventario/salida/{id}
+    defaults: { _controller: IncentivesInventarioBundle:Inventario:salida, id: null }
+
+inventario_listadosalida:
+    pattern:  /inventario/listadosalida/{arreglo}
+    defaults: { _controller: IncentivesInventarioBundle:Inventario:listadosalida, arreglo: null }
+    
+inventario_listadoliberar:
+    pattern:  /inventario/listadoliberar/{arreglo}
+    defaults: { _controller: IncentivesInventarioBundle:Inventario:listadoliberar, arreglo: null }
+
+inventario_exportar:
+    pattern:  /inventario/reporte
+    defaults: { _controller: IncentivesInventarioBundle:Inventario:reporte }
+    
+inventario_exportar_detalle:
+    pattern:  /inventario/reportedetalle
+    defaults: { _controller: IncentivesInventarioBundle:Inventario:reporteDetalle }
+
+planilla_agregar:
+    pattern:  /planilla/agregar/{planilla}/{producto}
+    defaults: { _controller: IncentivesInventarioBundle:Inventario:planillagregar, planilla: null, producto: null }
+
+logistica_despacho_solicitudes:
+    pattern:  /logistica/despachosolicitudes/{id}
+    defaults: { _controller: IncentivesInventarioBundle:Logistica:planillaDespachoSolicitudes, id: null }
+
+logistica_importar_guias:
+    pattern:  /logistica/importarguias
+    defaults: { _controller: IncentivesInventarioBundle:Logistica:importarGuias}

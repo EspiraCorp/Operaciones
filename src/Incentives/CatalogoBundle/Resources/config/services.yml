@@ -1,0 +1,16 @@
+parameters:
+#    incentives_catalogo.example.class: Incentives\CatalogoBundle\Example
+
+services:
+#    incentives_catalogo.example:
+#        class: %incentives_catalogo.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
+
+services:
+    #...
+    incentives_catalogo:
+        class: Incentives\CatalogoBundle\Model\catalogoFunciones
+        arguments: [@doctrine.orm.entity_manager]
+
+    em:
+        alias: doctrine.orm.entity_manager

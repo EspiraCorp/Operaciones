@@ -1,0 +1,80 @@
+participante:
+    pattern:  /participante
+    defaults: { _controller: IncentivesRedencionesBundle:Participante:listado}
+
+participante_nuevo:
+    pattern:  /participante/nuevo
+    defaults: { _controller: IncentivesRedencionesBundle:Participante:nuevo }
+
+participante_editar:
+    pattern:  /participante/editar/{id}
+    defaults: { _controller: IncentivesRedencionesBundle:Participante:editar, id: null }
+
+participante_estado:
+    pattern:  /participante/estado/{id}
+    defaults: { _controller: IncentivesRedencionesBundle:Participante:estado, id: null }
+
+redenciones:
+    pattern:  /redenciones
+    defaults: { _controller: IncentivesRedencionesBundle:Redencion:listado}
+
+redenciones_programa:
+    pattern:  /redenciones/{programa}
+    defaults: { _controller: IncentivesRedencionesBundle:Redencion:listadoprograma, programa: null}
+
+redenciones_datos:
+    pattern:  /redenciones/datos/{id}
+    defaults: { _controller: IncentivesRedencionesBundle:Redencion:datos, id: null}
+
+redenciones_estado:
+    pattern:  /redenciones/estado/{accion}/{id}
+    defaults: { _controller: IncentivesRedencionesBundle:Redencion:estado, accion: null, id: null}
+
+redenciones_exportar:
+    pattern:  /redenciones/exportar/{programa}
+    defaults: { _controller: IncentivesRedencionesBundle:Redencion:exportar}
+    
+redenciones_completo:
+    pattern:  /redencionescompleto
+    defaults: { _controller: IncentivesRedencionesBundle:Redencion:listadocompleto }
+    
+redenciones_exportarcompleto:
+    pattern:  /redencionesexportarcompleto
+    defaults: { _controller: IncentivesRedencionesBundle:Redencion:exportarCompleto}
+    
+redenciones_exportarnew:
+    pattern:  /redenciones/exportarnew/{programa}
+    defaults: { _controller: IncentivesRedencionesBundle:Redencion:exportarNew}
+
+guia_nueva:
+    pattern:  /guia/nueva
+    defaults: { _controller: IncentivesRedencionesBundle:Guia:nueva}
+
+redenciones_datosredencion:
+    pattern:  /redenciones/datosredencion/{redencion}
+    defaults: { _controller: IncentivesRedencionesBundle:Redencion:datosredencion, redencion: null}
+
+redenciones_listadototalpass:
+    pattern:  /listadototalpass/{programa}
+    defaults: { _controller: IncentivesRedencionesBundle:Redencion:listadototalpass, programa: null }
+
+redenciones_programastotalpass:
+    pattern:  /programastotalpass
+    defaults: { _controller: IncentivesRedencionesBundle:Redencion:programastotalpass }
+
+redenciones_exportartotalpass:
+    pattern:  /redenciones/exportartotalpass/{programa}
+    defaults: { _controller: IncentivesRedencionesBundle:Redencion:exportartotalpass}
+
+redenciones_editarproducto:
+    pattern:  /redenciones/editarproducto/{redencion}
+    defaults: { _controller: IncentivesRedencionesBundle:Redencion:editarproducto, redencion: null}
+
+redenciones_justificacion:
+    pattern:  /redenciones/justificacion/{id}/{planilla}
+    defaults: { _controller: IncentivesRedencionesBundle:Redencion:justificacion, id: null, planilla: null }
+    
+redenciones_editarenvio:
+    pattern:  /redenciones/editarenvio/{redencion}
+    defaults: { _controller: IncentivesRedencionesBundle:Redencion:envioedicion, redencion: null}
+

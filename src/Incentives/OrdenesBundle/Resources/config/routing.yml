@@ -1,0 +1,190 @@
+incentives_ordenes_homepage:
+    pattern:  /hello/{name}
+    defaults: { _controller: IncentivesOrdenesBundle:Default:index }
+
+ordenes:
+    pattern:  /ordenes
+    defaults: { _controller: IncentivesOrdenesBundle:Ordenes:listado }
+
+ordenes_nueva:
+    pattern:  /ordenes/nueva
+    defaults: { _controller: IncentivesOrdenesBundle:Ordenes:nueva }
+
+ordenes_nueva_solicitud:
+    pattern:  /ordenes/nuevasolicitud/{solicitudId}
+    defaults: { _controller: IncentivesOrdenesBundle:Ordenes:nuevaOrdenSolicitud, solicitudId: null }
+
+ordenes_datos:
+    pattern:  /ordenes/datos/{id}
+    defaults: { _controller: IncentivesOrdenesBundle:Ordenes:datos , id: null  }
+
+ordenes_editar:
+    pattern:  /ordenes/editar/{id}
+    defaults: { _controller: IncentivesOrdenesBundle:Ordenes:editar , id: null  }
+
+ordenes_recibir:
+    pattern:  /ordenes/recibir/{id}
+    defaults: { _controller: IncentivesOrdenesBundle:Ordenes:verificar , id: null  }
+
+ordenes_estado:
+    pattern:  /ordenes/estado/{id}/{cierre}
+    defaults: { _controller: IncentivesOrdenesBundle:Ordenes:estado , id: null, cierre:null  }
+
+ordenes_pdf:
+    pattern:  /ordenes/pdf/{id}
+    defaults: { _controller: IncentivesOrdenesBundle:Ordenes:pdf , id: null  }
+
+ordenes_pdfcodes:
+    pattern:  /ordenes/pdfcodes/{id}
+    defaults: { _controller: IncentivesOrdenesBundle:OrdenRedencion:pdfCodes , id: null  }
+
+ordenes_total:
+    pattern:  /ordenes/total/{id}
+    defaults: { _controller: IncentivesOrdenesBundle:Ordenes:totalorden , id: null  }
+
+ordenes_correo:
+    pattern:  /ordenes/correo/{id}
+    defaults: { _controller: IncentivesOrdenesBundle:Ordenes:correo, id: null }
+    requirements:
+        id:  \d+
+
+ordenredencion_generar:
+    pattern:  /ordenredencion/generar
+    defaults: { _controller: IncentivesOrdenesBundle:OrdenRedencion:generar}
+
+ordenredencion_generartotalpass:
+    pattern:  /ordenredencion/generartotalpass/{id}
+    defaults: { _controller: IncentivesOrdenesBundle:OrdenRedencion:generartotalpass, id: null }
+
+ordenredencion_totalpass:
+    pattern:  /ordenredencion/totalpass
+    defaults: { _controller: IncentivesOrdenesBundle:OrdenRedencion:totalPass }
+
+ordenredencion_aprobar:
+    pattern:  /ordenredencion/aprobar/{id}
+    defaults: { _controller: IncentivesOrdenesBundle:OrdenRedencion:aprobar, id: null}
+
+ordenredencion_cerrar:
+    pattern:  /ordenredencion/cerrar/{id}
+    defaults: { _controller: IncentivesOrdenesBundle:OrdenRedencion:cerrar, id: null}
+
+ordenredencion_cancelar:
+    pattern:  /ordenredencion/cancelar/{id}
+    defaults: { _controller: IncentivesOrdenesBundle:OrdenRedencion:cancelar, id: null}
+
+ordenredencion_pendientes:
+    pattern:  /ordenredencion/pendientes
+    defaults: { _controller: IncentivesOrdenesBundle:OrdenRedencion:pendientes}
+
+ordenredencion_editarvalores:
+    pattern:  /ordenredencion/editarvalores/{id}
+    defaults: { _controller: IncentivesOrdenesBundle:OrdenRedencion:editarvalores , id: null  }
+
+ordenredencion_listadopendientes:
+    pattern:  /ordenredencion/listadopendientes/{id}
+    defaults: { _controller: IncentivesOrdenesBundle:OrdenRedencion:listadopendientes , id: null  }
+
+ordenredencion_valores:
+    pattern:  /ordenredencion/valores/{id}
+    defaults: { _controller: IncentivesOrdenesBundle:OrdenRedencion:valores , id: null  }
+
+ordenredencion_pdf:
+    pattern:  /ordenredencion/pdf/{id}
+    defaults: { _controller: IncentivesOrdenesBundle:OrdenRedencion:pdf , id: null  }
+
+ordenredencion_pdffinal:
+    pattern:  /ordenredencion/pdffinal/{id}
+    defaults: { _controller: IncentivesOrdenesBundle:OrdenRedencion:pdffinal , id: null  }
+
+ordenes_ingreso_listado:
+    pattern:  /ordenes/ingreso/listado
+    defaults: { _controller: IncentivesOrdenesBundle:Ordenes:ingresolistado}
+
+ordenes_ingreso:
+    pattern:  /ordenes/ingreso/{id}
+    defaults: { _controller: IncentivesOrdenesBundle:Ordenes:ingreso , id: null}
+
+ordenes_ingreso_detalle:
+    pattern:  /ordenes/detalleingreso/{productoOrden}
+    defaults: { _controller: IncentivesOrdenesBundle:Ordenes:detalleIngreso, productoOrden: null }
+
+ordenes_ingreso_redencion:
+    pattern:  /ordenes/ingresoredencion/{redencion}
+    defaults: { _controller: IncentivesOrdenesBundle:Ordenes:ingresoRedencion, redencion: null }
+
+ordenes_agregarproducto:
+    pattern:  /ordenes/agregarproducto/{id}
+    defaults: { _controller: IncentivesOrdenesBundle:Ordenes:agregarproducto , id: null}
+
+ordenes_producto_cotizaciones:
+    pattern:  /ordenes/productocotizaciones/{id}
+    defaults: { _controller: IncentivesOrdenesBundle:Ordenes:productoCotizaciones , id: null}
+
+ordenes_agregarproducto_cotizaciones:
+    pattern:  /ordenes/agregarproductocotizaciones/{id}/{ordencompra}
+    defaults: { _controller: IncentivesOrdenesBundle:Ordenes:agregarProductoCotizaciones , id: null, ordencompra: null}
+
+ordenes_procesarvalores:
+    pattern:  /ordenes/procesarvalores
+    defaults: { _controller: IncentivesOrdenesBundle:Ordenes:procesarvalores }
+
+ordenes_actualizarcantidad:
+    pattern:  /ordenes/actualizarcantidad/{id}
+    defaults: { _controller: IncentivesOrdenesBundle:Ordenes:actualizarCantidad, id: null }
+
+ordenes_cerrarorden:
+    pattern:  /ordenes/cerrarorden/{id}
+    defaults: { _controller: IncentivesOrdenesBundle:Ordenes:cerrarOrden, id: null }
+
+ordenes_tracking:
+    pattern:  /ordenes/tracking/{id}
+    defaults: { _controller: IncentivesOrdenesBundle:OrdenRedencion:tracking , id: null}
+
+tracking_reporte:
+    pattern:  /tracking/reporte
+    defaults: { _controller: IncentivesOrdenesBundle:OrdenRedencion:trackingReporte }
+
+productos_proveedor:
+    pattern:  /productos/proveedor/{id}
+    defaults: { _controller: IncentivesOrdenesBundle:Ordenes:productosProveedor, id: null}
+
+ordenredencion_eliminar:
+    pattern:  /ordenredencion/eliminar/{id}
+    defaults: { _controller: IncentivesOrdenesBundle:OrdenRedencion:eliminarProducto , id: null  }
+
+ordenredencion_eliminarred:
+    pattern:  /ordenredencion/eliminarred/{id}
+    defaults: { _controller: IncentivesOrdenesBundle:OrdenRedencion:eliminarRedencion , id: null  }
+
+ordenes_generarsegmentado:
+    pattern:  /ordenes/generarsegmentado
+    defaults: { _controller: IncentivesOrdenesBundle:OrdenRedencion:generarSegmentado }
+
+ordenes_detallesegmentado:
+    pattern:  /ordenes/detallesegmentado/{id}/{categoria}
+    defaults: { _controller: IncentivesOrdenesBundle:OrdenRedencion:detalleSegmentado, id: null, categoria: null }
+
+ordenes_productoorden_detalle:
+    pattern:  /ordenes/detalleproductoorden/{productoOrden}
+    defaults: { _controller: IncentivesOrdenesBundle:Ordenes:detalleProductoOrden, productoOrden: null }
+    
+ordenes_productorequisicion_detalle:
+    pattern:  /ordenes/detalleproductorequisicion/{productoOrden}
+    defaults: { _controller: IncentivesOrdenesBundle:Ordenes:detalleProductoRequisicion, productoOrden: null }
+
+ordenes_productoorden_editar:
+    pattern:  /ordenes/editarproductoorden/{productoOrden}
+    defaults: { _controller: IncentivesOrdenesBundle:Ordenes:editarProductoOrden, productoOrden: null }
+    
+ordenes_reporteamazon:
+    pattern:  /ordenes/reporteamazon
+    defaults: { _controller: IncentivesOrdenesBundle:Ordenes:reporteAmazon }
+    
+ordenes_exportar:
+    pattern:  /ordenes/exportar
+    defaults: { _controller: IncentivesOrdenesBundle:Ordenes:exportar }
+    
+ordenes_exportar_productos:
+    pattern:  /ordenes/exportarproductos
+    defaults: { _controller: IncentivesOrdenesBundle:Ordenes:exportarProductos }
+
