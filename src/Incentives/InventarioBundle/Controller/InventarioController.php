@@ -51,15 +51,15 @@ class InventarioController extends Controller
         
         $query = $em->createQueryBuilder()
                     ->select('i inventario', 'pr producto','SUM(i.ingreso) ingresada','SUM(i.salio) salida')
-                     ->addSelect('(SELECT COUNT(i.planilla)
-            FROM IncentivesInventarioBundle:Inventario inv
-	    LEFT JOIN inv.orden oc
-            WHERE inv.producto = i.producto AND (inv.planilla IS NOT NULL OR (inv.orden IS NOT NULL AND oc.ordenesTipo=2) OR inv.salio=1) GROUP BY inv.producto) AS asignada'
-        )
+                     ->addSelect('(SELECT COUNT(inv.id)
+                            FROM IncentivesInventarioBundle:Inventario inv
+                        LEFT JOIN inv.orden oc
+                            WHERE inv.producto = i.producto AND (inv.despacho IS NOT NULL AND (inv.salio IS NULL OR inv.salio=0)) GROUP BY inv.producto) AS asignada'
+                        )
                 ->addSelect('(SELECT COUNT(inven.id)
                             FROM IncentivesInventarioBundle:Inventario inven
                 	    LEFT JOIN inven.orden oci
-                            WHERE inven.producto = i.producto AND (inven.planilla IS NULL AND (inven.salio=0 OR inven.salio IS NULL) AND inven.redencion IS NULL) GROUP BY inven.producto) AS disponible'
+                            WHERE inven.producto = i.producto AND (inven.despacho IS NULL AND (inven.salio=0 OR inven.salio IS NULL)) GROUP BY inven.producto) AS disponible'
                         )
                     ->from('IncentivesInventarioBundle:Inventario', 'i')
                     ->Join('i.producto','pr')
@@ -70,98 +70,83 @@ class InventarioController extends Controller
         return $this->render('IncentivesInventarioBundle:Inventario:listado.html.twig', 
             array('productos' => $productos));
     }
+
     
     public function reporteAction()
-    {
-        $em = $this->getDoctrine()->getManager();
+    {    
+                
+            $fp = fopen('php://temp','r+');
+            
+            // Header
+            $row = array('Id','Producto','Marca','Referencia','Descripcion','SKU','C. Ingreso','C. Salida','C. Asignada','C. Disponible');
+            
+            $em = $this->getDoctrine()->getManager();
 
-        //unidades totales
-        //unidades disponibles
-        //ingresos por OC
-        //ingresos manuales
-        
-        $query = $em->createQueryBuilder()
-                    ->select('i inventario', 'pr producto','SUM(i.ingreso) ingresada','SUM(i.salio) salida')
-                    ->addSelect('(SELECT COUNT(i.planilla)
+            //unidades totales
+            //unidades disponibles
+            //ingresos por OC
+            //ingresos manuales
+            
+            $query = $em->createQueryBuilder()
+                    ->select('i inventario', 'pr.nombre nombre', 'pr.codInc codInc', 'pr.descripcion descripcion', 'pr.referencia referencia', 'pr.marca marca','pr.id idProducto', 'SUM(i.ingreso) ingresada','SUM(i.salio) salida')
+                     ->addSelect('(SELECT COUNT(inv.id)
                             FROM IncentivesInventarioBundle:Inventario inv
-                	    LEFT JOIN inv.orden oc
-                            WHERE inv.producto = i.producto AND (inv.planilla IS NOT NULL OR (inv.orden IS NOT NULL AND oc.ordenesTipo=2) OR inv.salio=1) GROUP BY inv.producto) AS asignada'
+                        LEFT JOIN inv.orden oc
+                            WHERE inv.producto = i.producto AND (inv.despacho IS NOT NULL AND (inv.salio IS NULL OR inv.salio=0)) GROUP BY inv.producto) AS asignada'
                         )
-                   ->addSelect('(SELECT COUNT(inven.id)
+                ->addSelect('(SELECT COUNT(inven.id)
                             FROM IncentivesInventarioBundle:Inventario inven
                 	    LEFT JOIN inven.orden oci
-                            WHERE inven.producto = i.producto AND (inven.planilla IS NULL AND (inven.salio=0 OR inven.salio IS NULL) AND inven.redencion IS NULL) GROUP BY inven.producto) AS disponible'
+                            WHERE inven.producto = i.producto AND (inven.despacho IS NULL AND (inven.salio=0 OR inven.salio IS NULL)) GROUP BY inven.producto) AS disponible'
                         )
                     ->from('IncentivesInventarioBundle:Inventario', 'i')
-                    ->leftJoin('i.producto','pr')
+                    ->Join('i.producto','pr')
                     ->groupBy('i.producto')
                     ->orderBy('i.producto', 'ASC');
-        $productos = $query->getQuery()->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
-        
-        require_once($this->get('kernel')->getRootDir().'/config/dompdf_config.inc.php');
-        $uploadDir=dirname($this->container->getParameter('kernel.root_dir')).'/web/Planillas/';
-        
-        // Create new PHPExcel object
-        $objPHPExcel = new PHPExcel();
-        // Set document properties
-        $objPHPExcel->getProperties()->setCreator("Incentives SAS")
-                                         ->setLastModifiedBy("Icentives SAS")
-                                         ->setCategory("");
+            $productos = $query->getQuery()->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
 
-            $objPHPExcel->getActiveSheet()
-                         ->setCellValue('A1','Id')
-                        ->setCellValue('B1','Producto')
-                        ->setCellValue('C1','Marca')
-                        ->setCellValue('D1','Referencia')
-                        ->setCellValue('E1','Descripcion')
-                        ->setCellValue('F1','SKU')
-                        ->setCellValue('G1','C. Ingreso')
-                        ->setCellValue('H1','C. Salida')
-                        ->setCellValue('I1','C. Asignada')
-                        ->setCellValue('J1','C. Disponible');
+			//echo "<pre>"; print_r($productos); echo "</pre>"; exit;
+    			
+            $ir = 0;
+            foreach($productos as $key => $value){              
+               
+               if($ir==0){
+				   
+					fputcsv($fp,$row,';');
+				}
+               
+                $ir++;
+               
+                $row = array();
+				$row[] = $value['idProducto'];//1
+				
+    			$row[] = $value['nombre'];
+    			$row[] = $value['marca'];
+    			$row[] = $value['referencia'];
+    			$row[] = $value['descripcion'];
+    			$row[] = $value['codInc'];
+    			
+    			$row[] = 0 + $value['ingresada'];
+    			$row[] = 0 + $value['salida'];
+    			
+    			$row[] = 0 + $value['asignada'];
+    			$row[] = 0 + $value['disponible'];
+				
+						 
+				fputcsv($fp,$row,';');
+            }
 
-                $fil=2;
-                 
-                foreach ($productos as $key => $value) {
-
-                    $ocupada = 0;
-                    
-                    if($value['asignada'] > $value['salida']){
-                        $ocupada = $value['asignada'];
-                    }else{
-                        $ocupada = $value['salida'];
-                    }
-
-    				$objPHPExcel->getActiveSheet()
-    					->setCellValue('A'.$fil, $value['inventario']['producto']['id'])
-    					->setCellValue('B'.$fil, $value['inventario']['producto']['nombre'])
-    					->setCellValue('C'.$fil, $value['inventario']['producto']['marca'])
-    					->setCellValue('D'.$fil, $value['inventario']['producto']['referencia'])
-    					->setCellValue('E'.$fil, $value['inventario']['producto']['descripcion'])
-    					->setCellValue('F'.$fil, $value['inventario']['producto']['codInc'])
-    					->setCellValue('G'.$fil, $value['ingresada'])
-    					->setCellValue('H'.$fil, $value['salida'])
-    					->setCellValue('I'.$fil, $value['asignada'])
-    					->setCellValue('J'.$fil, $value['disponible']);
-    					
-
-    				$fil++;
-    				
-    			}
-    
-                $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel); 
-                $objWriter->save('Inventario.xlsx');  //send it to user, of course you can save it to disk also!
-                 // prepare BinaryFileResponse
-                $basePath = $this->container->getParameter('kernel.root_dir').'/../web/Planillas';
-                $filename = 'Inventario.xlsx';
-                $filePath = $basePath.'/'.$filename;
-                $objWriter->save($filePath);  //send it to user, of course you can save it to disk also!
-                 
-                $response = new BinaryFileResponse($filePath);
-                $response->trustXSendfileTypeHeader();
-                $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_INLINE, $filename, iconv('UTF-8', 'ASCII//TRANSLIT', $filename));
-            
-                return $response;
+			rewind($fp);
+			$csv = stream_get_contents($fp);
+			fclose($fp);
+			
+			$filename = 'Inventario.csv';
+			$response = new Response($csv);
+			
+			$response->headers->set('Content-Type', "text/csv");
+			$response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $filename));            
+			
+            return $response;
         
     }
      
