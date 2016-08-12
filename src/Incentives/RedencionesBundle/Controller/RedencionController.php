@@ -1599,7 +1599,7 @@ class RedencionController extends Controller
 						'Id','Fecha Redencion','Fecha Autorizacion','Fecha Modificacion','Redimido Por','Codigo Redencion',
                         'Nombre Participante','Cedula participante','Nombre envio','Documento envio','Telefono envio','Celular envio','Direccion envio',
                         'Barrio envio','Departamento','Ciudad','Puntos','Codigo EAN','Producto','Sku','Categoria','Proveedor Principal','Proveedor OC',
-                        'Costo OC','Valor Venta','Valor Mercado','Valor Consignacion','Orden de compra','Guia','Operador','Semaforo','Nombre Contacto',
+                        'Costo OC','Valor Venta','Valor Mercado','Valor Consignacion','Orden de compra','Fecha Orden Compra','Guia','Operador','Semaforo','Nombre Contacto',
                         'Documento Contacto','Direccion Contacto','Telefono Contacto','Fecha Despacho','Planilla','Factura','Fecha Entrega');
 			
 	 //print_r($redenciones); exit;       
@@ -1610,7 +1610,7 @@ class RedencionController extends Controller
                             envio.nombre nombre_envio,envio.documento documento_envio,envio.nombreContacto,envio.telefonoContacto,envio.direccionContacto,envio.documentoContacto,
                             envio.telefono,envio.barrio,envio.direccion,envio.celular,envio.departamentoNombre,envio.ciudadNombre,
                             pd.codEAN,pd.nombre producto,pd.codInc,ct.nombre categoria,pt.nombre participante,pt.documento,estado.nombre estado,
-                            pv.nombre proveedor, op.valorunidad, oc.consecutivo ordencompra,
+                            pv.nombre proveedor, op.valorunidad, oc.consecutivo ordencompra, oc.fechaCreacion fechaOrden,
                             pl.id planilla,f.numero factura, r.otros
                     	FROM Redenciones r 
                     	LEFT JOIN Productocatalogo as pc ON r.productocatalogo_id=pc.id 
@@ -1694,10 +1694,11 @@ class RedencionController extends Controller
 						
 						if($value['estado_id'] > 3 && $value['ordencompra']==""){
 							$row[] = "Inventario";//28
-
+                            $row[] = "";//28
 						}else{
 							//OC
 							$row[] = $value['ordencompra'];//28
+                            $row[] = $value['fechaOrden'];//29
 						}
 						
 					    //consultar guias
@@ -1828,7 +1829,7 @@ class RedencionController extends Controller
 						'Id','Fecha Redencion','Fecha Autorizacion','Fecha Modificacion','Progama','Codigo Redencion',
                         'Nombre Participante','Cedula participante','Nombre envio','Documento envio','Telefono envio','Celular envio','Direccion envio',
                         'Barrio envio','Departamento','Ciudad','Puntos','Codigo EAN','Producto','Sku','Categoria','Proveedor Principal','Proveedor OC',
-                        'Costo OC','Valor Venta','Valor Mercado','Valor Consignacion','Orden de compra','Guia','Operador','Semaforo','Nombre Contacto',
+                        'Costo OC','Valor Venta','Valor Mercado','Valor Consignacion','Orden de compra','Fecha Orden Compra','Guia','Operador','Semaforo','Nombre Contacto',
                         'Documento Contacto','Direccion Contacto','Telefono Contacto','Fecha Despacho','Planilla','Factura','Fecha Entrega');
 			
             //print_r($redenciones); exit;       
@@ -1839,7 +1840,7 @@ class RedencionController extends Controller
                             envio.nombre nombre_envio,envio.documento documento_envio,envio.nombreContacto,envio.telefonoContacto,envio.direccionContacto,envio.documentoContacto,
                             envio.telefono,envio.barrio,envio.direccion,envio.celular,envio.departamentoNombre,envio.ciudadNombre,
                             pd.codEAN,pd.nombre producto,pd.codInc,ct.nombre categoria,pt.nombre participante,pt.documento,estado.nombre estado,
-                            pv.nombre proveedor, op.valorunidad, oc.consecutivo ordencompra,
+                            pv.nombre proveedor, op.valorunidad, oc.consecutivo ordencompra,oc.fechaCreacion fechaOrden,
                             pl.id planilla,f.numero factura, r.otros, pg.nombre programa
                     	FROM Redenciones r 
                     	LEFT JOIN Productocatalogo as pc ON r.productocatalogo_id=pc.id 
@@ -1938,10 +1939,12 @@ class RedencionController extends Controller
 						
 						if($value['estado_id'] > 3 && $value['ordencompra']==""){
 							$row[] = "Inventario";//28
+							$row[] = "";//29
 
 						}else{
 							//OC
 							$row[] = $value['ordencompra'];//28
+							$row[] = $value['fechaOrden'];//29
 						}
 						
 					    //consultar guias
@@ -1965,22 +1968,22 @@ class RedencionController extends Controller
                         $guias = implode(" / ", $guias);
                         $opeador = implode(" / ", $opeador);
             
-						$row[] = utf8_decode($guias);//29 guias
-						$row[] = utf8_decode($opeador);//30 operador
+						$row[] = utf8_decode($guias);//30 guias
+						$row[] = utf8_decode($opeador);//31 operador
 						
-						$row[] = $value['estado'];//31 estado
+						$row[] = $value['estado'];//32 estado
 					
 						//Envio
-						$row[] = utf8_decode($value['nombreContacto']);//32
-						$row[] = utf8_decode($value['documentoContacto']);//33
-						$row[] = utf8_decode($value['direccionContacto']);//34
-						$row[] = utf8_decode($value['telefonoContacto']);//35
+						$row[] = utf8_decode($value['nombreContacto']);//33
+						$row[] = utf8_decode($value['documentoContacto']);//34
+						$row[] = utf8_decode($value['direccionContacto']);//35
+						$row[] = utf8_decode($value['telefonoContacto']);//36
 						
-						$row[] = $value['fechaDespacho'];//36
+						$row[] = $value['fechaDespacho'];//37
 						
-						$row[] = $value['planilla'];//37
-						$row[] = $value['factura'];//38
-						$row[] = $value['fechaEntrega'];//39
+						$row[] = $value['planilla'];//38
+						$row[] = $value['factura'];//39
+						$row[] = $value['fechaEntrega'];//40
 						 
 						fputcsv($fp,$row,';');
             }

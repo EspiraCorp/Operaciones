@@ -54,12 +54,12 @@ class InventarioController extends Controller
                      ->addSelect('(SELECT COUNT(inv.id)
                             FROM IncentivesInventarioBundle:Inventario inv
                         LEFT JOIN inv.orden oc
-                            WHERE inv.producto = i.producto AND (inv.despacho IS NOT NULL AND (inv.salio IS NULL OR inv.salio=0)) GROUP BY inv.producto) AS asignada'
+                            WHERE inv.producto = i.producto AND ((inv.despacho IS NOT NULL OR inv.solicitud IS NOT NULL) AND (inv.salio IS NULL OR inv.salio=0)) GROUP BY inv.producto) AS asignada'
                         )
                 ->addSelect('(SELECT COUNT(inven.id)
                             FROM IncentivesInventarioBundle:Inventario inven
                 	    LEFT JOIN inven.orden oci
-                            WHERE inven.producto = i.producto AND (inven.despacho IS NULL AND (inven.salio=0 OR inven.salio IS NULL)) GROUP BY inven.producto) AS disponible'
+                            WHERE inven.producto = i.producto AND (inven.despacho IS NULL AND inven.solicitud IS NULL AND (inven.salio=0 OR inven.salio IS NULL)) GROUP BY inven.producto) AS disponible'
                         )
                     ->from('IncentivesInventarioBundle:Inventario', 'i')
                     ->Join('i.producto','pr')
