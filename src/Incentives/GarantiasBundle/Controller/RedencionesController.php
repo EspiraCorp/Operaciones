@@ -150,7 +150,13 @@ class RedencionesController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $novedadD = $em->getRepository('IncentivesGarantiasBundle:Novedades')->find($novedad);
-        $redencionD = $em->getRepository('IncentivesRedencionesBundle:Redenciones')->find($novedadD->getRedencion()->getId());
+        
+        $redencionId = $novedadD->getRedencion()->getId();
+        $redencionD = $em->getRepository('IncentivesRedencionesBundle:Redenciones')->find($redencionId);
+
+        $historico = $em->getRepository('IncentivesRedencionesBundle:Redencioneshistorico')->findByRedencion($redencionId);
+        $datosenvio = $em->getRepository('IncentivesRedencionesBundle:Redencionesenvios')->findByRedencion($redencionId);
+        $imagen = $em->getRepository('IncentivesCatalogoBundle:Imagenproducto')->findBy(array('producto' => $redencionD->getProductocatalogo()->getProducto()->getId(), 'estado' => 1));
 
         $form = $this->createForm(new NovedadaccionType(), $novedadD);
                     
@@ -187,7 +193,7 @@ class RedencionesController extends Controller
         }           
 
         return $this->render('IncentivesGarantiasBundle:Redenciones:novedadaccion.html.twig', array(
-            'form' => $form->createView(),'redencion' => $redencionD,
+            'form' => $form->createView(),'redencion' => $redencionD, 'datosenvio' => $datosenvio[0], 'historico' => $historico, 'imagen' => $imagen
         ));
     }
 
