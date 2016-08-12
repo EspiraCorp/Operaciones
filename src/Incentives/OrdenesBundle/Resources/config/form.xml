@@ -1,4 +1,0 @@
-<service id="incentives.ordenes.form.autocomplete_entity_type" class="Incentives\OrdenesBundle\Form\Type\ProveedorAutocompleteType">
-    <argument type="service" id="doctrine.orm.entity_manager"/>
-    <tag name="form.type" alias="autocomplete_entity" />
-</service>
