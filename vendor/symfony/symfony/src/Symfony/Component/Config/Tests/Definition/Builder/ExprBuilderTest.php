@@ -114,7 +114,7 @@ class ExprBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertFinalizedValueIs('new_value', $test);
 
         $test = $this->getTestBuilder()
-            ->ifNotInArray(array('foo', 'bar', 'value_from_config' ))
+            ->ifNotInArray(array('foo', 'bar', 'value_from_config'))
             ->then($this->returnClosure('new_value'))
         ->end();
         $this->assertFinalizedValueIs('new_value', $test);
@@ -148,6 +148,26 @@ class ExprBuilderTest extends \PHPUnit_Framework_TestCase
             ->thenUnset()
         ->end();
         $this->assertEquals(array(), $this->finalizeTestBuilder($test));
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage You must specify an if part.
+     */
+    public function testEndIfPartNotSpecified()
+    {
+        $this->getTestBuilder()->end();
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage You must specify a then part.
+     */
+    public function testEndThenPartNotSpecified()
+    {
+        $builder = $this->getTestBuilder();
+        $builder->ifPart = 'test';
+        $builder->end();
     }
 
     /**

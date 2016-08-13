@@ -27,6 +27,34 @@ class FormHelperTableLayoutTest extends AbstractTableLayoutTest
      */
     protected $engine;
 
+    protected $testableFeatures = array(
+        'choice_attr',
+    );
+
+    public function testStartTagHasNoActionAttributeWhenActionIsEmpty()
+    {
+        $form = $this->factory->create('Symfony\Component\Form\Extension\Core\Type\FormType', null, array(
+            'method' => 'get',
+            'action' => '',
+        ));
+
+        $html = $this->renderStart($form->createView());
+
+        $this->assertSame('<form name="form" method="get">', $html);
+    }
+
+    public function testStartTagHasActionAttributeWhenActionIsZero()
+    {
+        $form = $this->factory->create('Symfony\Component\Form\Extension\Core\Type\FormType', null, array(
+            'method' => 'get',
+            'action' => '0',
+        ));
+
+        $html = $this->renderStart($form->createView());
+
+        $this->assertSame('<form name="form" method="get" action="0">', $html);
+    }
+
     protected function getExtensions()
     {
         // should be moved to the Form component once absolute file paths are supported
@@ -44,7 +72,7 @@ class FormHelperTableLayoutTest extends AbstractTableLayoutTest
         ));
 
         return array_merge(parent::getExtensions(), array(
-            new TemplatingExtension($this->engine, $this->csrfProvider, array(
+            new TemplatingExtension($this->engine, $this->csrfTokenManager, array(
                 'FrameworkBundle:Form',
                 'FrameworkBundle:FormTable',
             )),
@@ -66,7 +94,7 @@ class FormHelperTableLayoutTest extends AbstractTableLayoutTest
     protected function renderEnctype(FormView $view)
     {
         if (!method_exists($form = $this->engine->get('form'), 'enctype')) {
-            $this->markTestSkipped(sprintf("Deprecated method %s->enctype() is not implemented.", get_class($form)));
+            $this->markTestSkipped(sprintf('Deprecated method %s->enctype() is not implemented.', get_class($form)));
         }
 
         return (string) $form->enctype($view);

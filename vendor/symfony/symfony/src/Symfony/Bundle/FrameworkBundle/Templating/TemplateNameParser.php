@@ -25,7 +25,7 @@ use Symfony\Component\Templating\TemplateNameParser as BaseTemplateNameParser;
 class TemplateNameParser extends BaseTemplateNameParser
 {
     protected $kernel;
-    protected $cache;
+    protected $cache = array();
 
     /**
      * Constructor.
@@ -35,7 +35,6 @@ class TemplateNameParser extends BaseTemplateNameParser
     public function __construct(KernelInterface $kernel)
     {
         $this->kernel = $kernel;
-        $this->cache = array();
     }
 
     /**
@@ -50,13 +49,13 @@ class TemplateNameParser extends BaseTemplateNameParser
         }
 
         // normalize name
-        $name = str_replace(':/', ':', preg_replace('#/{2,}#', '/', strtr($name, '\\', '/')));
+        $name = str_replace(':/', ':', preg_replace('#/{2,}#', '/', str_replace('\\', '/', $name)));
 
         if (false !== strpos($name, '..')) {
             throw new \RuntimeException(sprintf('Template name "%s" contains invalid characters.', $name));
         }
 
-        if (!preg_match('/^([^:]*):([^:]*):(.+)\.([^\.]+)\.([^\.]+)$/', $name, $matches)) {
+        if (!preg_match('/^(?:([^:]*):([^:]*):)?(.+)\.([^\.]+)\.([^\.]+)$/', $name, $matches) || $this->isAbsolutePath($name) || 0 === strpos($name, '@')) {
             return parent::parse($name);
         }
 
@@ -71,5 +70,10 @@ class TemplateNameParser extends BaseTemplateNameParser
         }
 
         return $this->cache[$name] = $template;
+    }
+
+    private function isAbsolutePath($file)
+    {
+        return (bool) preg_match('#^(?:/|[a-zA-Z]:)#', $file);
     }
 }

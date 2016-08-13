@@ -22,8 +22,6 @@ use Symfony\Component\HttpFoundation\Request;
  * the controller method arguments.
  *
  * @author Fabien Potencier <fabien@symfony.com>
- *
- * @api
  */
 class ControllerResolver implements ControllerResolverInterface
 {
@@ -40,25 +38,16 @@ class ControllerResolver implements ControllerResolverInterface
     }
 
     /**
-     * Returns the Controller instance associated with a Request.
+     * {@inheritdoc}
      *
      * This method looks for a '_controller' request attribute that represents
      * the controller name (a string like ClassName::MethodName).
-     *
-     * @param Request $request A Request instance
-     *
-     * @return mixed|bool A PHP callable representing the Controller,
-     *                    or false if this resolver is not able to determine the controller
-     *
-     * @throws \InvalidArgumentException|\LogicException If the controller can't be found
-     *
-     * @api
      */
     public function getController(Request $request)
     {
         if (!$controller = $request->attributes->get('_controller')) {
             if (null !== $this->logger) {
-                $this->logger->warning('Unable to look for the controller as the "_controller" parameter is missing');
+                $this->logger->warning('Unable to look for the controller as the "_controller" parameter is missing.');
             }
 
             return false;
@@ -78,7 +67,7 @@ class ControllerResolver implements ControllerResolverInterface
 
         if (false === strpos($controller, ':')) {
             if (method_exists($controller, '__invoke')) {
-                return new $controller();
+                return $this->instantiateController($controller);
             } elseif (function_exists($controller)) {
                 return $controller;
             }
@@ -94,16 +83,7 @@ class ControllerResolver implements ControllerResolverInterface
     }
 
     /**
-     * Returns the arguments to pass to the controller.
-     *
-     * @param Request $request    A Request instance
-     * @param mixed   $controller A PHP callable
-     *
-     * @return array
-     *
-     * @throws \RuntimeException When value for argument given is not provided
-     *
-     * @api
+     * {@inheritdoc}
      */
     public function getArguments(Request $request, $controller)
     {
@@ -125,7 +105,11 @@ class ControllerResolver implements ControllerResolverInterface
         $arguments = array();
         foreach ($parameters as $param) {
             if (array_key_exists($param->name, $attributes)) {
-                $arguments[] = $attributes[$param->name];
+                if (PHP_VERSION_ID >= 50600 && $param->isVariadic() && is_array($attributes[$param->name])) {
+                    $arguments = array_merge($arguments, array_values($attributes[$param->name]));
+                } else {
+                    $arguments[] = $attributes[$param->name];
+                }
             } elseif ($param->getClass() && $param->getClass()->isInstance($request)) {
                 $arguments[] = $request;
             } elseif ($param->isDefaultValueAvailable()) {
@@ -151,7 +135,7 @@ class ControllerResolver implements ControllerResolverInterface
      *
      * @param string $controller A Controller string
      *
-     * @return mixed A PHP callable
+     * @return callable A PHP callable
      *
      * @throws \InvalidArgumentException
      */
@@ -167,6 +151,18 @@ class ControllerResolver implements ControllerResolverInterface
             throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
         }
 
-        return array(new $class(), $method);
+        return array($this->instantiateController($class), $method);
+    }
+
+    /**
+     * Returns an instantiated controller.
+     *
+     * @param string $class A class name
+     *
+     * @return object
+     */
+    protected function instantiateController($class)
+    {
+        return new $class();
     }
 }

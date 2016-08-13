@@ -19,32 +19,22 @@ use Symfony\Component\DependencyInjection\Exception\RuntimeException;
  * Holds parameters.
  *
  * @author Fabien Potencier <fabien@symfony.com>
- *
- * @api
  */
 class ParameterBag implements ParameterBagInterface
 {
-    protected $parameters;
-    protected $resolved;
+    protected $parameters = array();
+    protected $resolved = false;
 
     /**
-     * Constructor.
-     *
      * @param array $parameters An array of parameters
-     *
-     * @api
      */
     public function __construct(array $parameters = array())
     {
-        $this->parameters = array();
         $this->add($parameters);
-        $this->resolved = false;
     }
 
     /**
      * Clears all parameters.
-     *
-     * @api
      */
     public function clear()
     {
@@ -55,8 +45,6 @@ class ParameterBag implements ParameterBagInterface
      * Adds parameters to the service container parameters.
      *
      * @param array $parameters An array of parameters
-     *
-     * @api
      */
     public function add(array $parameters)
     {
@@ -66,11 +54,7 @@ class ParameterBag implements ParameterBagInterface
     }
 
     /**
-     * Gets the service container parameters.
-     *
-     * @return array An array of parameters
-     *
-     * @api
+     * {@inheritdoc}
      */
     public function all()
     {
@@ -78,15 +62,7 @@ class ParameterBag implements ParameterBagInterface
     }
 
     /**
-     * Gets a service container parameter.
-     *
-     * @param string $name The parameter name
-     *
-     * @return mixed The parameter value
-     *
-     * @throws ParameterNotFoundException if the parameter is not defined
-     *
-     * @api
+     * {@inheritdoc}
      */
     public function get($name)
     {
@@ -98,7 +74,7 @@ class ParameterBag implements ParameterBagInterface
             }
 
             $alternatives = array();
-            foreach (array_keys($this->parameters) as $key) {
+            foreach ($this->parameters as $key => $parameterValue) {
                 $lev = levenshtein($name, $key);
                 if ($lev <= strlen($name) / 3 || false !== strpos($key, $name)) {
                     $alternatives[] = $key;
@@ -116,8 +92,6 @@ class ParameterBag implements ParameterBagInterface
      *
      * @param string $name  The parameter name
      * @param mixed  $value The parameter value
-     *
-     * @api
      */
     public function set($name, $value)
     {
@@ -125,13 +99,7 @@ class ParameterBag implements ParameterBagInterface
     }
 
     /**
-     * Returns true if a parameter name is defined.
-     *
-     * @param string $name The parameter name
-     *
-     * @return bool true if the parameter name is defined, false otherwise
-     *
-     * @api
+     * {@inheritdoc}
      */
     public function has($name)
     {
@@ -142,8 +110,6 @@ class ParameterBag implements ParameterBagInterface
      * Removes a parameter.
      *
      * @param string $name The parameter name
-     *
-     * @api
      */
     public function remove($name)
     {
@@ -151,7 +117,7 @@ class ParameterBag implements ParameterBagInterface
     }
 
     /**
-     * Replaces parameter placeholders (%name%) by their values for all parameters.
+     * {@inheritdoc}
      */
     public function resolve()
     {
@@ -286,6 +252,9 @@ class ParameterBag implements ParameterBagInterface
         return $value;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function unescapeValue($value)
     {
         if (is_string($value)) {

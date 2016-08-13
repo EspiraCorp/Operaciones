@@ -15,8 +15,6 @@ namespace Symfony\Component\HttpKernel;
  * Contains all events thrown in the HttpKernel component.
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
- *
- * @api
  */
 final class KernelEvents
 {
@@ -32,8 +30,6 @@ final class KernelEvents
      * @Event
      *
      * @var string
-     *
-     * @api
      */
     const REQUEST = 'kernel.request';
 
@@ -48,8 +44,6 @@ final class KernelEvents
      * @Event
      *
      * @var string
-     *
-     * @api
      */
     const EXCEPTION = 'kernel.exception';
 
@@ -65,8 +59,6 @@ final class KernelEvents
      * @Event
      *
      * @var string
-     *
-     * @api
      */
     const VIEW = 'kernel.view';
 
@@ -81,8 +73,6 @@ final class KernelEvents
      * @Event
      *
      * @var string
-     *
-     * @api
      */
     const CONTROLLER = 'kernel.controller';
 
@@ -97,8 +87,6 @@ final class KernelEvents
      * @Event
      *
      * @var string
-     *
-     * @api
      */
     const RESPONSE = 'kernel.response';
 
@@ -114,4 +102,18 @@ final class KernelEvents
      * @var string
      */
     const TERMINATE = 'kernel.terminate';
+
+    /**
+     * The FINISH_REQUEST event occurs when a response was generated for a request.
+     *
+     * This event allows you to reset the global and environmental state of
+     * the application, when it was changed during the request.
+     * The event listener method receives a
+     * Symfony\Component\HttpKernel\Event\FinishRequestEvent instance.
+     *
+     * @Event
+     *
+     * @var string
+     */
+    const FINISH_REQUEST = 'kernel.finish_request';
 }

@@ -11,8 +11,12 @@
 
 namespace Symfony\Component\Finder\Shell;
 
+@trigger_error('The '.__NAMESPACE__.'\Command class is deprecated since version 2.8 and will be removed in 3.0.', E_USER_DEPRECATED);
+
 /**
  * @author Jean-François Simon <contact@jfsimon.fr>
+ *
+ * @deprecated since 2.8, to be removed in 3.0.
  */
 class Command
 {
@@ -24,12 +28,12 @@ class Command
     /**
      * @var array
      */
-    private $bits;
+    private $bits = array();
 
     /**
      * @var array
      */
-    private $labels;
+    private $labels = array();
 
     /**
      * @var \Closure|null
@@ -39,13 +43,11 @@ class Command
     /**
      * Constructor.
      *
-     * @param Command $parent Parent command
+     * @param Command|null $parent Parent command
      */
     public function __construct(Command $parent = null)
     {
         $this->parent = $parent;
-        $this->bits = array();
-        $this->labels = array();
     }
 
     /**
@@ -61,7 +63,7 @@ class Command
     /**
      * Creates a new Command instance.
      *
-     * @param Command $parent Parent command
+     * @param Command|null $parent Parent command
      *
      * @return Command New Command instance
      */
@@ -170,7 +172,7 @@ class Command
         }
 
         $this->bits[] = self::create($this);
-        $this->labels[$label] = count($this->bits)-1;
+        $this->labels[$label] = count($this->bits) - 1;
 
         return $this->bits[$this->labels[$label]];
     }
@@ -232,7 +234,7 @@ class Command
     }
 
     /**
-     * @return callable|null
+     * @return \Closure|null
      */
     public function getErrorHandler()
     {
@@ -289,7 +291,7 @@ class Command
      */
     public function addAtIndex($bit, $index)
     {
-        array_splice($this->bits, $index, 0, $bit);
+        array_splice($this->bits, $index, 0, $bit instanceof self ? array($bit) : $bit);
 
         return $this;
     }

@@ -43,9 +43,9 @@ class TextBundleWriter implements BundleWriterInterface
     /**
      * Writes a "resourceBundle" node.
      *
-     * @param resource $file       The file handle to write to.
-     * @param string   $bundleName The name of the bundle.
-     * @param mixed    $value      The value of the node.
+     * @param resource $file       The file handle to write to
+     * @param string   $bundleName The name of the bundle
+     * @param mixed    $value      The value of the node
      * @param bool     $fallback   Whether the resource bundle should be merged
      *                             with the fallback locale.
      *
@@ -63,9 +63,9 @@ class TextBundleWriter implements BundleWriterInterface
     /**
      * Writes a "resource" node.
      *
-     * @param resource $file          The file handle to write to.
-     * @param mixed    $value         The value of the node.
-     * @param int      $indentation   The number of levels to indent.
+     * @param resource $file          The file handle to write to
+     * @param mixed    $value         The value of the node
+     * @param int      $indentation   The number of levels to indent
      * @param bool     $requireBraces Whether to require braces to be printed
      *                                around the value.
      *
@@ -118,8 +118,8 @@ class TextBundleWriter implements BundleWriterInterface
     /**
      * Writes an "integer" node.
      *
-     * @param resource $file  The file handle to write to.
-     * @param int      $value The value of the node.
+     * @param resource $file  The file handle to write to
+     * @param int      $value The value of the node
      *
      * @see http://source.icu-project.org/repos/icu/icuhtml/trunk/design/bnf_rb.txt
      */
@@ -131,9 +131,9 @@ class TextBundleWriter implements BundleWriterInterface
     /**
      * Writes an "intvector" node.
      *
-     * @param resource $file        The file handle to write to.
-     * @param array    $value       The value of the node.
-     * @param int      $indentation The number of levels to indent.
+     * @param resource $file        The file handle to write to
+     * @param array    $value       The value of the node
+     * @param int      $indentation The number of levels to indent
      *
      * @see http://source.icu-project.org/repos/icu/icuhtml/trunk/design/bnf_rb.txt
      */
@@ -145,14 +145,14 @@ class TextBundleWriter implements BundleWriterInterface
             fprintf($file, "%s%d,\n", str_repeat('    ', $indentation + 1), $int);
         }
 
-        fprintf($file, "%s}", str_repeat('    ', $indentation));
+        fprintf($file, '%s}', str_repeat('    ', $indentation));
     }
 
     /**
      * Writes a "string" node.
      *
-     * @param resource $file          The file handle to write to.
-     * @param string   $value         The value of the node.
+     * @param resource $file          The file handle to write to
+     * @param string   $value         The value of the node
      * @param bool     $requireBraces Whether to require braces to be printed
      *                                around the value.
      *
@@ -172,9 +172,9 @@ class TextBundleWriter implements BundleWriterInterface
     /**
      * Writes an "array" node.
      *
-     * @param resource $file        The file handle to write to.
-     * @param array    $value       The value of the node.
-     * @param int      $indentation The number of levels to indent.
+     * @param resource $file        The file handle to write to
+     * @param array    $value       The value of the node
+     * @param int      $indentation The number of levels to indent
      *
      * @see http://source.icu-project.org/repos/icu/icuhtml/trunk/design/bnf_rb.txt
      */
@@ -196,9 +196,9 @@ class TextBundleWriter implements BundleWriterInterface
     /**
      * Writes a "table" node.
      *
-     * @param resource           $file        The file handle to write to.
-     * @param array|\Traversable $value       The value of the node.
-     * @param int                $indentation The number of levels to indent.
+     * @param resource           $file        The file handle to write to
+     * @param array|\Traversable $value       The value of the node
+     * @param int                $indentation The number of levels to indent
      * @param bool               $fallback    Whether the table should be merged
      *                                        with the fallback locale.
      *
@@ -212,7 +212,7 @@ class TextBundleWriter implements BundleWriterInterface
         }
 
         if (!$fallback) {
-            fwrite($file, ":table(nofallback)");
+            fwrite($file, ':table(nofallback)');
         }
 
         fwrite($file, "{\n");

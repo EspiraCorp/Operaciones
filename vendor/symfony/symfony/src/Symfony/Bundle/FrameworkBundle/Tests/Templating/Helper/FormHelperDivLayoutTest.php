@@ -27,6 +27,10 @@ class FormHelperDivLayoutTest extends AbstractDivLayoutTest
      */
     protected $engine;
 
+    protected $testableFeatures = array(
+        'choice_attr',
+    );
+
     protected function getExtensions()
     {
         // should be moved to the Form component once absolute file paths are supported
@@ -44,7 +48,7 @@ class FormHelperDivLayoutTest extends AbstractDivLayoutTest
         ));
 
         return array_merge(parent::getExtensions(), array(
-            new TemplatingExtension($this->engine, $this->csrfProvider, array(
+            new TemplatingExtension($this->engine, $this->csrfTokenManager, array(
                 'FrameworkBundle:Form',
             )),
         ));
@@ -57,6 +61,30 @@ class FormHelperDivLayoutTest extends AbstractDivLayoutTest
         parent::tearDown();
     }
 
+    public function testStartTagHasNoActionAttributeWhenActionIsEmpty()
+    {
+        $form = $this->factory->create('Symfony\Component\Form\Extension\Core\Type\FormType', null, array(
+            'method' => 'get',
+            'action' => '',
+        ));
+
+        $html = $this->renderStart($form->createView());
+
+        $this->assertSame('<form name="form" method="get">', $html);
+    }
+
+    public function testStartTagHasActionAttributeWhenActionIsZero()
+    {
+        $form = $this->factory->create('Symfony\Component\Form\Extension\Core\Type\FormType', null, array(
+            'method' => 'get',
+            'action' => '0',
+        ));
+
+        $html = $this->renderStart($form->createView());
+
+        $this->assertSame('<form name="form" method="get" action="0">', $html);
+    }
+
     protected function renderForm(FormView $view, array $vars = array())
     {
         return (string) $this->engine->get('form')->form($view, $vars);
@@ -65,7 +93,7 @@ class FormHelperDivLayoutTest extends AbstractDivLayoutTest
     protected function renderEnctype(FormView $view)
     {
         if (!method_exists($form = $this->engine->get('form'), 'enctype')) {
-            $this->markTestSkipped(sprintf("Deprecated method %s->enctype() is not implemented.", get_class($form)));
+            $this->markTestSkipped(sprintf('Deprecated method %s->enctype() is not implemented.', get_class($form)));
         }
 
         return (string) $form->enctype($view);

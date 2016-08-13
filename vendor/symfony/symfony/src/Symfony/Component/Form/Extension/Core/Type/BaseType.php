@@ -15,13 +15,14 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Form\Util\StringUtil;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Encapsulates common logic of {@link FormType} and {@link ButtonType}.
  *
  * This type does not appear in the form's type inheritance chain and as such
- * cannot be extended (via {@link FormTypeExtension}s) nor themed.
+ * cannot be extended (via {@link \Symfony\Component\Form\FormExtensionInterface}) nor themed.
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
@@ -44,6 +45,7 @@ abstract class BaseType extends AbstractType
         $name = $form->getName();
         $blockName = $options['block_name'] ?: $form->getName();
         $translationDomain = $options['translation_domain'];
+        $labelFormat = $options['label_format'];
 
         if ($view->parent) {
             if ('' !== ($parentFullName = $view->parent->vars['full_name'])) {
@@ -56,8 +58,12 @@ abstract class BaseType extends AbstractType
                 $uniqueBlockPrefix = '_'.$blockName;
             }
 
-            if (!$translationDomain) {
+            if (null === $translationDomain) {
                 $translationDomain = $view->parent->vars['translation_domain'];
+            }
+
+            if (!$labelFormat) {
+                $labelFormat = $view->parent->vars['label_format'];
             }
         } else {
             $id = $name;
@@ -72,13 +78,19 @@ abstract class BaseType extends AbstractType
 
         $blockPrefixes = array();
         for ($type = $form->getConfig()->getType(); null !== $type; $type = $type->getParent()) {
-            array_unshift($blockPrefixes, $type->getName());
+            if (method_exists($type, 'getBlockPrefix')) {
+                array_unshift($blockPrefixes, $type->getBlockPrefix());
+            } else {
+                @trigger_error(get_class($type).': The ResolvedFormTypeInterface::getBlockPrefix() method will be added in version 3.0. You should add it to your implementation.', E_USER_DEPRECATED);
+
+                $fqcn = get_class($type->getInnerType());
+                $name = $type->getName();
+                $hasCustomName = $name !== $fqcn;
+
+                array_unshift($blockPrefixes, $hasCustomName ? $name : StringUtil::fqcnToBlockPrefix($fqcn));
+            }
         }
         $blockPrefixes[] = $uniqueBlockPrefix;
-
-        if (!$translationDomain) {
-            $translationDomain = 'messages';
-        }
 
         $view->vars = array_replace($view->vars, array(
             'form' => $view,
@@ -87,6 +99,7 @@ abstract class BaseType extends AbstractType
             'full_name' => $fullName,
             'disabled' => $form->isDisabled(),
             'label' => $options['label'],
+            'label_format' => $labelFormat,
             'multipart' => false,
             'attr' => $options['attr'],
             'block_prefixes' => $blockPrefixes,
@@ -105,19 +118,18 @@ abstract class BaseType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
             'block_name' => null,
             'disabled' => false,
             'label' => null,
+            'label_format' => null,
             'attr' => array(),
             'translation_domain' => null,
             'auto_initialize' => true,
         ));
 
-        $resolver->setAllowedTypes(array(
-            'attr' => 'array',
-        ));
+        $resolver->setAllowedTypes('attr', 'array');
     }
 }

@@ -25,24 +25,10 @@ class PrototypedArrayNode extends ArrayNode
 {
     protected $prototype;
     protected $keyAttribute;
-    protected $removeKeyAttribute;
-    protected $minNumberOfElements;
-    protected $defaultValue;
+    protected $removeKeyAttribute = false;
+    protected $minNumberOfElements = 0;
+    protected $defaultValue = array();
     protected $defaultChildren;
-
-    /**
-     * Constructor.
-     *
-     * @param string        $name   The Node's name
-     * @param NodeInterface $parent The node parent
-     */
-    public function __construct($name, NodeInterface $parent = null)
-    {
-        parent::__construct($name, $parent);
-
-        $this->minNumberOfElements = 0;
-        $this->defaultValue = array();
-    }
 
     /**
      * Sets the minimum number of elements that a prototype based node must
@@ -131,7 +117,7 @@ class PrototypedArrayNode extends ArrayNode
         if (null === $children) {
             $this->defaultChildren = array('defaults');
         } else {
-            $this->defaultChildren = is_integer($children) && $children > 0 ? range(1, $children) : (array) $children;
+            $this->defaultChildren = is_int($children) && $children > 0 ? range(1, $children) : (array) $children;
         }
     }
 
@@ -211,7 +197,7 @@ class PrototypedArrayNode extends ArrayNode
             $this->prototype->setName($k);
             try {
                 $value[$k] = $this->prototype->finalize($v);
-            } catch (UnsetKeyException $unset) {
+            } catch (UnsetKeyException $e) {
                 unset($value[$k]);
             }
         }
@@ -245,7 +231,7 @@ class PrototypedArrayNode extends ArrayNode
 
         $value = $this->remapXml($value);
 
-        $isAssoc = array_keys($value) !== range(0, count($value) -1);
+        $isAssoc = array_keys($value) !== range(0, count($value) - 1);
         $normalized = array();
         foreach ($value as $k => $v) {
             if (null !== $this->keyAttribute && is_array($v)) {
@@ -292,8 +278,8 @@ class PrototypedArrayNode extends ArrayNode
     /**
      * Merges values together.
      *
-     * @param mixed $leftSide  The left side to merge.
-     * @param mixed $rightSide The right side to merge.
+     * @param mixed $leftSide  The left side to merge
+     * @param mixed $rightSide The right side to merge
      *
      * @return mixed The merged values
      *

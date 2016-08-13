@@ -26,7 +26,7 @@ class HttpKernelTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException \RuntimeException
      */
-    public function testHandleWhenControllerThrowsAnExceptionAndRawIsTrue()
+    public function testHandleWhenControllerThrowsAnExceptionAndCatchIsTrue()
     {
         $kernel = new HttpKernel(new EventDispatcher(), $this->getResolver(function () { throw new \RuntimeException(); }));
 
@@ -36,14 +36,14 @@ class HttpKernelTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException \RuntimeException
      */
-    public function testHandleWhenControllerThrowsAnExceptionAndRawIsFalseAndNoListenerIsRegistered()
+    public function testHandleWhenControllerThrowsAnExceptionAndCatchIsFalseAndNoListenerIsRegistered()
     {
         $kernel = new HttpKernel(new EventDispatcher(), $this->getResolver(function () { throw new \RuntimeException(); }));
 
         $kernel->handle(new Request(), HttpKernelInterface::MASTER_REQUEST, false);
     }
 
-    public function testHandleWhenControllerThrowsAnExceptionAndRawIsFalse()
+    public function testHandleWhenControllerThrowsAnExceptionAndCatchIsTrueWithAHandlingListener()
     {
         $dispatcher = new EventDispatcher();
         $dispatcher->addListener(KernelEvents::EXCEPTION, function ($event) {
@@ -51,10 +51,29 @@ class HttpKernelTest extends \PHPUnit_Framework_TestCase
         });
 
         $kernel = new HttpKernel($dispatcher, $this->getResolver(function () { throw new \RuntimeException('foo'); }));
-        $response = $kernel->handle(new Request());
+        $response = $kernel->handle(new Request(), HttpKernelInterface::MASTER_REQUEST, true);
 
         $this->assertEquals('500', $response->getStatusCode());
         $this->assertEquals('foo', $response->getContent());
+    }
+
+    public function testHandleWhenControllerThrowsAnExceptionAndCatchIsTrueWithANonHandlingListener()
+    {
+        $exception = new \RuntimeException();
+
+        $dispatcher = new EventDispatcher();
+        $dispatcher->addListener(KernelEvents::EXCEPTION, function ($event) {
+            // should set a response, but does not
+        });
+
+        $kernel = new HttpKernel($dispatcher, $this->getResolver(function () use ($exception) { throw $exception; }));
+
+        try {
+            $kernel->handle(new Request(), HttpKernelInterface::MASTER_REQUEST, true);
+            $this->fail('LogicException expected');
+        } catch (\RuntimeException $e) {
+            $this->assertSame($exception, $e);
+        }
     }
 
     public function testHandleExceptionWithARedirectionResponse()
@@ -236,6 +255,41 @@ class HttpKernelTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($kernel, $capturedKernel);
         $this->assertEquals($request, $capturedRequest);
         $this->assertEquals($response, $capturedResponse);
+    }
+
+    public function testVerifyRequestStackPushPopDuringHandle()
+    {
+        $request = new Request();
+
+        $stack = $this->getMock('Symfony\Component\HttpFoundation\RequestStack', array('push', 'pop'));
+        $stack->expects($this->at(0))->method('push')->with($this->equalTo($request));
+        $stack->expects($this->at(1))->method('pop');
+
+        $dispatcher = new EventDispatcher();
+        $kernel = new HttpKernel($dispatcher, $this->getResolver(), $stack);
+
+        $kernel->handle($request, HttpKernelInterface::MASTER_REQUEST);
+    }
+
+    /**
+     * @expectedException Symfony\Component\HttpKernel\Exception\BadRequestHttpException
+     */
+    public function testInconsistentClientIpsOnMasterRequests()
+    {
+        $dispatcher = new EventDispatcher();
+        $dispatcher->addListener(KernelEvents::REQUEST, function ($event) {
+            $event->getRequest()->getClientIp();
+        });
+
+        $kernel = new HttpKernel($dispatcher, $this->getResolver());
+
+        $request = new Request();
+        $request->setTrustedProxies(array('1.1.1.1'));
+        $request->server->set('REMOTE_ADDR', '1.1.1.1');
+        $request->headers->set('FORWARDED', '2.2.2.2');
+        $request->headers->set('X_FORWARDED_FOR', '3.3.3.3');
+
+        $kernel->handle($request, $kernel::MASTER_REQUEST, false);
     }
 
     protected function getResolver($controller = null)

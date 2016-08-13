@@ -22,34 +22,15 @@ use Symfony\Component\Config\Definition\Exception\UnsetKeyException;
  */
 class ArrayNode extends BaseNode implements PrototypeNodeInterface
 {
-    protected $xmlRemappings;
-    protected $children;
-    protected $allowFalse;
-    protected $allowNewKeys;
-    protected $addIfNotSet;
-    protected $performDeepMerging;
-    protected $ignoreExtraKeys;
-    protected $normalizeKeys;
-
-    /**
-     * Constructor.
-     *
-     * @param string        $name   The Node's name
-     * @param NodeInterface $parent The node parent
-     */
-    public function __construct($name, NodeInterface $parent = null)
-    {
-        parent::__construct($name, $parent);
-
-        $this->children = array();
-        $this->xmlRemappings = array();
-        $this->removeKeyAttribute = true;
-        $this->allowFalse = false;
-        $this->addIfNotSet = false;
-        $this->allowNewKeys = true;
-        $this->performDeepMerging = true;
-        $this->normalizeKeys = true;
-    }
+    protected $xmlRemappings = array();
+    protected $children = array();
+    protected $allowFalse = false;
+    protected $allowNewKeys = true;
+    protected $addIfNotSet = false;
+    protected $performDeepMerging = true;
+    protected $ignoreExtraKeys = false;
+    protected $removeExtraKeys = true;
+    protected $normalizeKeys = true;
 
     public function setNormalizeKeys($normalizeKeys)
     {
@@ -75,14 +56,17 @@ class ArrayNode extends BaseNode implements PrototypeNodeInterface
             return $value;
         }
 
+        $normalized = array();
+
         foreach ($value as $k => $v) {
             if (false !== strpos($k, '-') && false === strpos($k, '_') && !array_key_exists($normalizedKey = str_replace('-', '_', $k), $value)) {
-                $value[$normalizedKey] = $v;
-                unset($value[$k]);
+                $normalized[$normalizedKey] = $v;
+            } else {
+                $normalized[$k] = $v;
             }
         }
 
-        return $value;
+        return $normalized;
     }
 
     /**
@@ -103,6 +87,16 @@ class ArrayNode extends BaseNode implements PrototypeNodeInterface
     public function setXmlRemappings(array $remappings)
     {
         $this->xmlRemappings = $remappings;
+    }
+
+    /**
+     * Gets the xml remappings that should be performed.
+     *
+     * @return array $remappings an array of the form array(array(string, string))
+     */
+    public function getXmlRemappings()
+    {
+        return $this->xmlRemappings;
     }
 
     /**
@@ -150,10 +144,12 @@ class ArrayNode extends BaseNode implements PrototypeNodeInterface
      * Whether extra keys should just be ignore without an exception.
      *
      * @param bool $boolean To allow extra keys
+     * @param bool $remove  To remove extra keys
      */
-    public function setIgnoreExtraKeys($boolean)
+    public function setIgnoreExtraKeys($boolean, $remove = true)
     {
         $this->ignoreExtraKeys = (bool) $boolean;
+        $this->removeExtraKeys = $this->ignoreExtraKeys && $remove;
     }
 
     /**
@@ -256,7 +252,7 @@ class ArrayNode extends BaseNode implements PrototypeNodeInterface
 
             try {
                 $value[$name] = $child->finalize($value[$name]);
-            } catch (UnsetKeyException $unset) {
+            } catch (UnsetKeyException $e) {
                 unset($value[$name]);
             }
         }
@@ -279,6 +275,9 @@ class ArrayNode extends BaseNode implements PrototypeNodeInterface
                 $this->getPath(),
                 gettype($value)
             ));
+            if ($hint = $this->getInfo()) {
+                $ex->addHint($hint);
+            }
             $ex->setPath($this->getPath());
 
             throw $ex;
@@ -307,6 +306,8 @@ class ArrayNode extends BaseNode implements PrototypeNodeInterface
             if (isset($this->children[$name])) {
                 $normalized[$name] = $this->children[$name]->normalize($val);
                 unset($value[$name]);
+            } elseif (!$this->removeExtraKeys) {
+                $normalized[$name] = $val;
             }
         }
 
@@ -348,8 +349,8 @@ class ArrayNode extends BaseNode implements PrototypeNodeInterface
     /**
      * Merges values together.
      *
-     * @param mixed $leftSide  The left side to merge.
-     * @param mixed $rightSide The right side to merge.
+     * @param mixed $leftSide  The left side to merge
+     * @param mixed $rightSide The right side to merge
      *
      * @return mixed The merged values
      *

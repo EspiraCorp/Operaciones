@@ -11,10 +11,9 @@
 
 namespace Symfony\Bridge\Twig\Tests\Node;
 
-use Symfony\Bridge\Twig\Tests\TestCase;
 use Symfony\Bridge\Twig\Node\FormThemeNode;
 
-class FormThemeTest extends TestCase
+class FormThemeTest extends \PHPUnit_Framework_TestCase
 {
     public function testConstructor()
     {
@@ -42,7 +41,7 @@ class FormThemeTest extends TestCase
 
         $node = new FormThemeNode($form, $resources, 0);
 
-        $compiler = new \Twig_Compiler(new \Twig_Environment());
+        $compiler = new \Twig_Compiler(new \Twig_Environment($this->getMock('Twig_LoaderInterface')));
 
         $this->assertEquals(
             sprintf(

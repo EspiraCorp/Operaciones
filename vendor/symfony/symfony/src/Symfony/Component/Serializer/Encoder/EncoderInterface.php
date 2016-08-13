@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Serializer\Encoder;
 
+use Symfony\Component\Serializer\Exception\UnexpectedValueException;
+
 /**
  * Defines the interface of encoders.
  *
@@ -23,9 +25,11 @@ interface EncoderInterface
      *
      * @param mixed  $data    Data to encode
      * @param string $format  Format name
-     * @param array  $context options that normalizers/encoders have access to.
+     * @param array  $context options that normalizers/encoders have access to
      *
-     * @return string|bool|int|float|null
+     * @return scalar
+     *
+     * @throws UnexpectedValueException
      */
     public function encode($data, $format, array $context = array());
 

@@ -15,6 +15,8 @@ namespace Symfony\Component\Routing\Matcher\Dumper;
  * Collection of routes.
  *
  * @author Arnaud Le Blanc <arnaud.lb@gmail.com>
+ *
+ * @internal
  */
 class DumperCollection implements \IteratorAggregate
 {
@@ -24,7 +26,7 @@ class DumperCollection implements \IteratorAggregate
     private $parent;
 
     /**
-     * @var (DumperCollection|DumperRoute)[]
+     * @var DumperCollection[]|DumperRoute[]
      */
     private $children = array();
 
@@ -36,7 +38,7 @@ class DumperCollection implements \IteratorAggregate
     /**
      * Returns the children routes and collections.
      *
-     * @return (DumperCollection|DumperRoute)[] Array of DumperCollection|DumperRoute
+     * @return DumperCollection[]|DumperRoute[] Array of DumperCollection|DumperRoute
      */
     public function all()
     {
@@ -50,7 +52,7 @@ class DumperCollection implements \IteratorAggregate
      */
     public function add($child)
     {
-        if ($child instanceof DumperCollection) {
+        if ($child instanceof self) {
             $child->setParent($this);
         }
         $this->children[] = $child;
@@ -64,7 +66,7 @@ class DumperCollection implements \IteratorAggregate
     public function setAll(array $children)
     {
         foreach ($children as $child) {
-            if ($child instanceof DumperCollection) {
+            if ($child instanceof self) {
                 $child->setParent($this);
             }
         }
@@ -74,7 +76,7 @@ class DumperCollection implements \IteratorAggregate
     /**
      * Returns an iterator over the children.
      *
-     * @return \Iterator The iterator
+     * @return \Iterator|DumperCollection[]|DumperRoute[] The iterator
      */
     public function getIterator()
     {

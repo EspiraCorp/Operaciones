@@ -26,23 +26,19 @@ use Symfony\Component\Security\Core\User\EquatableInterface;
 abstract class AbstractToken implements TokenInterface
 {
     private $user;
-    private $roles;
-    private $authenticated;
-    private $attributes;
+    private $roles = array();
+    private $authenticated = false;
+    private $attributes = array();
 
     /**
      * Constructor.
      *
-     * @param RoleInterface[] $roles An array of roles
+     * @param RoleInterface[]|string[] $roles An array of roles
      *
      * @throws \InvalidArgumentException
      */
     public function __construct(array $roles = array())
     {
-        $this->authenticated = false;
-        $this->attributes = array();
-
-        $this->roles = array();
         foreach ($roles as $role) {
             if (is_string($role)) {
                 $role = new Role($role);
@@ -219,7 +215,7 @@ abstract class AbstractToken implements TokenInterface
     }
 
     /**
-     * Sets a attribute.
+     * Sets an attribute.
      *
      * @param string $name  The attribute name
      * @param mixed  $value The attribute value
@@ -235,7 +231,7 @@ abstract class AbstractToken implements TokenInterface
     public function __toString()
     {
         $class = get_class($this);
-        $class = substr($class, strrpos($class, '\\')+1);
+        $class = substr($class, strrpos($class, '\\') + 1);
 
         $roles = array();
         foreach ($this->roles as $role) {
@@ -252,7 +248,7 @@ abstract class AbstractToken implements TokenInterface
         }
 
         if ($this->user instanceof EquatableInterface) {
-            return ! (bool) $this->user->isEqualTo($user);
+            return !(bool) $this->user->isEqualTo($user);
         }
 
         if ($this->user->getPassword() !== $user->getPassword()) {

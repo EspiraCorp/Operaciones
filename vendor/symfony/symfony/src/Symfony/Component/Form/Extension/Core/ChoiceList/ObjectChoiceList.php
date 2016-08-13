@@ -2,14 +2,16 @@
 
 /*
  * This file is part of the Symfony package.
-*
-* (c) Fabien Potencier <fabien@symfony.com>
-*
-* For the full copyright and license information, please view the LICENSE
-* file that was distributed with this source code.
-*/
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Symfony\Component\Form\Extension\Core\ChoiceList;
+
+@trigger_error('The '.__NAMESPACE__.'\ObjectChoiceList class is deprecated since version 2.7 and will be removed in 3.0. Use Symfony\Component\Form\ChoiceList\ArrayChoiceList instead.', E_USER_DEPRECATED);
 
 use Symfony\Component\Form\Exception\StringCastException;
 use Symfony\Component\Form\Exception\InvalidArgumentException;
@@ -32,6 +34,9 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
  * </code>
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
+ *
+ * @deprecated since Symfony 2.7, to be removed in version 3.0.
+ *             Use {@link \Symfony\Component\Form\ChoiceList\ArrayChoiceList} instead.
  */
 class ObjectChoiceList extends ChoiceList
 {
@@ -83,7 +88,7 @@ class ObjectChoiceList extends ChoiceList
      * @param string                    $valuePath        A property path pointing to the property used
      *                                                    for the choice values. If not given, integers
      *                                                    are generated instead.
-     * @param PropertyAccessorInterface $propertyAccessor The reflection graph for reading property paths.
+     * @param PropertyAccessorInterface $propertyAccessor The reflection graph for reading property paths
      */
     public function __construct($choices, $labelPath = null, array $preferredChoices = array(), $groupPath = null, $valuePath = null, PropertyAccessorInterface $propertyAccessor = null)
     {
@@ -100,9 +105,9 @@ class ObjectChoiceList extends ChoiceList
      *
      * Safe to be called multiple times. The list is cleared on every call.
      *
-     * @param array|\Traversable $choices          The choices to write into the list.
-     * @param array              $labels           Ignored.
-     * @param array              $preferredChoices The choices to display with priority.
+     * @param array|\Traversable $choices          The choices to write into the list
+     * @param array              $labels           Ignored
+     * @param array              $preferredChoices The choices to display with priority
      *
      * @throws InvalidArgumentException When passing a hierarchy of choices and using
      *                                  the "groupPath" option at the same time.
@@ -149,6 +154,82 @@ class ObjectChoiceList extends ChoiceList
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getValuesForChoices(array $choices)
+    {
+        if (!$this->valuePath) {
+            return parent::getValuesForChoices($choices);
+        }
+
+        // Use the value path to compare the choices
+        $choices = $this->fixChoices($choices);
+        $values = array();
+
+        foreach ($choices as $i => $givenChoice) {
+            // Ignore non-readable choices
+            if (!is_object($givenChoice) && !is_array($givenChoice)) {
+                continue;
+            }
+
+            $givenValue = (string) $this->propertyAccessor->getValue($givenChoice, $this->valuePath);
+
+            foreach ($this->values as $value) {
+                if ($value === $givenValue) {
+                    $values[$i] = $value;
+                    unset($choices[$i]);
+
+                    if (0 === count($choices)) {
+                        break 2;
+                    }
+                }
+            }
+        }
+
+        return $values;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @deprecated since version 2.4, to be removed in 3.0.
+     */
+    public function getIndicesForChoices(array $choices)
+    {
+        @trigger_error('The '.__METHOD__.' method is deprecated since version 2.4 and will be removed in 3.0.', E_USER_DEPRECATED);
+
+        if (!$this->valuePath) {
+            return parent::getIndicesForChoices($choices);
+        }
+
+        // Use the value path to compare the choices
+        $choices = $this->fixChoices($choices);
+        $indices = array();
+
+        foreach ($choices as $i => $givenChoice) {
+            // Ignore non-readable choices
+            if (!is_object($givenChoice) && !is_array($givenChoice)) {
+                continue;
+            }
+
+            $givenValue = (string) $this->propertyAccessor->getValue($givenChoice, $this->valuePath);
+
+            foreach ($this->values as $j => $value) {
+                if ($value === $givenValue) {
+                    $indices[$i] = $j;
+                    unset($choices[$i]);
+
+                    if (0 === count($choices)) {
+                        break 2;
+                    }
+                }
+            }
+        }
+
+        return $indices;
+    }
+
+    /**
      * Creates a new unique value for this choice.
      *
      * If a property path for the value was given at object creation,
@@ -157,7 +238,7 @@ class ObjectChoiceList extends ChoiceList
      *
      * @param mixed $choice The choice to create a value for
      *
-     * @return int|string A unique value without character limitations.
+     * @return int|string A unique value without character limitations
      */
     protected function createValue($choice)
     {

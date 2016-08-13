@@ -183,7 +183,17 @@ class ArgvInputTest extends \PHPUnit_Framework_TestCase
             array(
                 array('cli.php', 'foo', 'bar'),
                 new InputDefinition(),
-                'Too many arguments.',
+                'No arguments expected, got "foo".',
+            ),
+            array(
+                array('cli.php', 'foo', 'bar'),
+                new InputDefinition(array(new InputArgument('number'))),
+                'Too many arguments, expected arguments "number".',
+            ),
+            array(
+                array('cli.php', 'foo', 'bar', 'zzz'),
+                new InputDefinition(array(new InputArgument('number'), new InputArgument('county'))),
+                'Too many arguments, expected arguments "number" "county".',
             ),
             array(
                 array('cli.php', '--foo'),
@@ -257,7 +267,7 @@ class ArgvInputTest extends \PHPUnit_Framework_TestCase
     public function testGetFirstArgument()
     {
         $input = new ArgvInput(array('cli.php', '-fbbar'));
-        $this->assertEquals('', $input->getFirstArgument(), '->getFirstArgument() returns the first argument from the raw input');
+        $this->assertNull($input->getFirstArgument(), '->getFirstArgument() returns null when there is no arguments');
 
         $input = new ArgvInput(array('cli.php', '-fbbar', 'foo'));
         $this->assertEquals('foo', $input->getFirstArgument(), '->getFirstArgument() returns the first argument from the raw input');

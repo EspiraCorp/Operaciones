@@ -11,11 +11,21 @@
 
 namespace Symfony\Component\Validator\Tests\Constraints;
 
+use Symfony\Bridge\PhpUnit\DnsMock;
 use Symfony\Component\Validator\Constraints\Url;
 use Symfony\Component\Validator\Constraints\UrlValidator;
+use Symfony\Component\Validator\Validation;
 
+/**
+ * @group dns-sensitive
+ */
 class UrlValidatorTest extends AbstractConstraintValidatorTest
 {
+    protected function getApiVersion()
+    {
+        return Validation::API_VERSION_2_5;
+    }
+
     protected function createValidator()
     {
         return new UrlValidator();
@@ -31,6 +41,13 @@ class UrlValidatorTest extends AbstractConstraintValidatorTest
     public function testEmptyStringIsValid()
     {
         $this->validator->validate('', new Url());
+
+        $this->assertNoViolation();
+    }
+
+    public function testEmptyStringFromObjectIsValid()
+    {
+        $this->validator->validate(new EmailProvider(), new Url());
 
         $this->assertNoViolation();
     }
@@ -58,7 +75,7 @@ class UrlValidatorTest extends AbstractConstraintValidatorTest
         return array(
             array('http://a.pl'),
             array('http://www.google.com'),
-            //array('http://www.google.com.') OK as of 2.5
+            array('http://www.google.com.'),
             array('http://www.google.museum'),
             array('https://google.com/'),
             array('https://google.com:80/'),
@@ -72,7 +89,7 @@ class UrlValidatorTest extends AbstractConstraintValidatorTest
             array('http://symfony.com/#?'),
             array('http://www.symfony.com/doc/current/book/validation.html#supported-constraints'),
             array('http://very.long.domain.name.com/'),
-            //array('http://localhost/') OK as of 2.5
+            array('http://localhost/'),
             array('http://127.0.0.1/'),
             array('http://127.0.0.1:80/'),
             array('http://[::1]/'),
@@ -104,6 +121,12 @@ class UrlValidatorTest extends AbstractConstraintValidatorTest
             array('http://☎.com/'),
             array('http://username:password@symfony.com'),
             array('http://user-name@symfony.com'),
+            array('http://symfony.com?'),
+            array('http://symfony.com?query=1'),
+            array('http://symfony.com/?query=1'),
+            array('http://symfony.com#'),
+            array('http://symfony.com#fragment'),
+            array('http://symfony.com/#fragment'),
         );
     }
 
@@ -120,6 +143,7 @@ class UrlValidatorTest extends AbstractConstraintValidatorTest
 
         $this->buildViolation('myMessage')
             ->setParameter('{{ value }}', '"'.$url.'"')
+            ->setCode(Url::INVALID_URL_ERROR)
             ->assertRaised();
     }
 
@@ -133,8 +157,6 @@ class UrlValidatorTest extends AbstractConstraintValidatorTest
             array('http://goog_le.com'),
             array('http://google.com::aa'),
             array('http://google.com:aa'),
-            array('http://symfony.com?'),
-            array('http://symfony.com#'),
             array('ftp://google.fr'),
             array('faked://google.fr'),
             array('http://127.0.0.1:aa/'),
@@ -169,5 +191,43 @@ class UrlValidatorTest extends AbstractConstraintValidatorTest
             array('file://127.0.0.1'),
             array('git://[::1]/'),
         );
+    }
+
+    /**
+     * @dataProvider getCheckDns
+     * @requires function Symfony\Bridge\PhpUnit\DnsMock::withMockedHosts
+     */
+    public function testCheckDns($violation)
+    {
+        DnsMock::withMockedHosts(array('example.com' => array(array('type' => $violation ? '' : 'A'))));
+
+        $constraint = new Url(array(
+            'checkDNS' => true,
+            'dnsMessage' => 'myMessage',
+        ));
+
+        $this->validator->validate('http://example.com', $constraint);
+
+        if (!$violation) {
+            $this->assertNoViolation();
+        } else {
+            $this->buildViolation('myMessage')
+                ->setParameter('{{ value }}', '"example.com"')
+                ->setCode(Url::INVALID_URL_ERROR)
+                ->assertRaised();
+        }
+    }
+
+    public function getCheckDns()
+    {
+        return array(array(true), array(false));
+    }
+}
+
+class EmailProvider
+{
+    public function __toString()
+    {
+        return '';
     }
 }

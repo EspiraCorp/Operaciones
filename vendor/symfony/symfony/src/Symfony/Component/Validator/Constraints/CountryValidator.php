@@ -12,6 +12,7 @@
 namespace Symfony\Component\Validator\Constraints;
 
 use Symfony\Component\Intl\Intl;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
@@ -20,8 +21,6 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
  * Validates whether a value is a valid country code.
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
- *
- * @api
  */
 class CountryValidator extends ConstraintValidator
 {
@@ -30,6 +29,10 @@ class CountryValidator extends ConstraintValidator
      */
     public function validate($value, Constraint $constraint)
     {
+        if (!$constraint instanceof Country) {
+            throw new UnexpectedTypeException($constraint, __NAMESPACE__.'\Country');
+        }
+
         if (null === $value || '' === $value) {
             return;
         }
@@ -42,9 +45,17 @@ class CountryValidator extends ConstraintValidator
         $countries = Intl::getRegionBundle()->getCountryNames();
 
         if (!isset($countries[$value])) {
-            $this->context->addViolation($constraint->message, array(
-                '{{ value }}' => $this->formatValue($value),
-            ));
+            if ($this->context instanceof ExecutionContextInterface) {
+                $this->context->buildViolation($constraint->message)
+                    ->setParameter('{{ value }}', $this->formatValue($value))
+                    ->setCode(Country::NO_SUCH_COUNTRY_ERROR)
+                    ->addViolation();
+            } else {
+                $this->buildViolation($constraint->message)
+                    ->setParameter('{{ value }}', $this->formatValue($value))
+                    ->setCode(Country::NO_SUCH_COUNTRY_ERROR)
+                    ->addViolation();
+            }
         }
     }
 }

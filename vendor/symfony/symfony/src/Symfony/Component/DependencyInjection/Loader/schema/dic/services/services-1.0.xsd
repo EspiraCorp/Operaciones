@@ -24,13 +24,27 @@
       ]]></xsd:documentation>
     </xsd:annotation>
     <xsd:sequence>
-      <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
-      <xsd:element name="imports" type="imports" minOccurs="0" maxOccurs="1" />
-      <xsd:element name="parameters" type="parameters" minOccurs="0" maxOccurs="1" />
-      <xsd:element name="services" type="services" minOccurs="0" maxOccurs="1" />
-      <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+      <xsd:group ref="foreign" />
+      <xsd:sequence minOccurs="0">
+        <xsd:element name="imports" type="imports" />
+        <xsd:group ref="foreign" />
+      </xsd:sequence>
+      <xsd:sequence minOccurs="0">
+        <xsd:element name="parameters" type="parameters" />
+        <xsd:group ref="foreign" />
+      </xsd:sequence>
+      <xsd:sequence minOccurs="0">
+        <xsd:element name="services" type="services" />
+        <xsd:group ref="foreign" />
+      </xsd:sequence>
     </xsd:sequence>
   </xsd:complexType>
+
+  <xsd:group name="foreign">
+    <xsd:sequence>
+      <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+    </xsd:sequence>
+  </xsd:group>
 
   <xsd:complexType name="services">
     <xsd:annotation>
@@ -64,7 +78,10 @@
     <xsd:attribute name="ignore-errors" type="boolean" />
   </xsd:complexType>
 
-  <xsd:complexType name="configurator">
+  <xsd:complexType name="callable">
+    <xsd:choice minOccurs="0" maxOccurs="1">
+      <xsd:element name="service" type="service" minOccurs="0" maxOccurs="1" />
+    </xsd:choice>
     <xsd:attribute name="id" type="xsd:string" />
     <xsd:attribute name="service" type="xsd:string" />
     <xsd:attribute name="class" type="xsd:string" />
@@ -76,13 +93,17 @@
     <xsd:choice maxOccurs="unbounded">
       <xsd:element name="file" type="xsd:string" minOccurs="0" maxOccurs="1" />
       <xsd:element name="argument" type="argument" minOccurs="0" maxOccurs="unbounded" />
-      <xsd:element name="configurator" type="configurator" minOccurs="0" maxOccurs="1" />
+      <xsd:element name="configurator" type="callable" minOccurs="0" maxOccurs="1" />
+      <xsd:element name="factory" type="callable" minOccurs="0" maxOccurs="1" />
+      <xsd:element name="deprecated" type="xsd:string" minOccurs="0" maxOccurs="1" />
       <xsd:element name="call" type="call" minOccurs="0" maxOccurs="unbounded" />
       <xsd:element name="tag" type="tag" minOccurs="0" maxOccurs="unbounded" />
       <xsd:element name="property" type="property" minOccurs="0" maxOccurs="unbounded" />
+      <xsd:element name="autowiring-type" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
     </xsd:choice>
     <xsd:attribute name="id" type="xsd:string" />
     <xsd:attribute name="class" type="xsd:string" />
+    <xsd:attribute name="shared" type="boolean" />
     <xsd:attribute name="scope" type="xsd:string" />
     <xsd:attribute name="public" type="boolean" />
     <xsd:attribute name="synthetic" type="boolean" />
@@ -94,10 +115,14 @@
     <xsd:attribute name="factory-service" type="xsd:string" />
     <xsd:attribute name="alias" type="xsd:string" />
     <xsd:attribute name="parent" type="xsd:string" />
+    <xsd:attribute name="decorates" type="xsd:string" />
+    <xsd:attribute name="decoration-inner-name" type="xsd:string" />
+    <xsd:attribute name="decoration-priority" type="xsd:integer" />
+    <xsd:attribute name="autowire" type="boolean" />
   </xsd:complexType>
 
   <xsd:complexType name="tag">
-    <xsd:attribute name="name" type="xsd:string" />
+    <xsd:attribute name="name" type="xsd:string" use="required" />
     <xsd:anyAttribute namespace="##any" processContents="lax" />
   </xsd:complexType>
 
@@ -165,6 +190,7 @@
     <xsd:restriction base="xsd:string">
       <xsd:enumeration value="collection" />
       <xsd:enumeration value="service" />
+      <xsd:enumeration value="expression" />
       <xsd:enumeration value="string" />
       <xsd:enumeration value="constant" />
     </xsd:restriction>

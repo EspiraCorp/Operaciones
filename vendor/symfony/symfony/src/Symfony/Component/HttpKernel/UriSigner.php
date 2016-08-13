@@ -51,7 +51,7 @@ class UriSigner
 
         $uri = $this->buildUrl($url, $params);
 
-        return $uri.(false === (strpos($uri, '?')) ? '?' : '&').'_hash='.$this->computeHash($uri);
+        return $uri.(false === strpos($uri, '?') ? '?' : '&').'_hash='.$this->computeHash($uri);
     }
 
     /**
@@ -86,22 +86,22 @@ class UriSigner
 
     private function computeHash($uri)
     {
-        return urlencode(base64_encode(hash_hmac('sha1', $uri, $this->secret, true)));
+        return urlencode(base64_encode(hash_hmac('sha256', $uri, $this->secret, true)));
     }
 
     private function buildUrl(array $url, array $params = array())
     {
-        ksort($params);
-        $url['query'] = http_build_query($params);
+        ksort($params, SORT_STRING);
+        $url['query'] = http_build_query($params, '', '&');
 
-        $scheme   = isset($url['scheme']) ? $url['scheme'].'://' : '';
-        $host     = isset($url['host']) ? $url['host'] : '';
-        $port     = isset($url['port']) ? ':'.$url['port'] : '';
-        $user     = isset($url['user']) ? $url['user'] : '';
-        $pass     = isset($url['pass']) ? ':'.$url['pass']  : '';
-        $pass     = ($user || $pass) ? "$pass@" : '';
-        $path     = isset($url['path']) ? $url['path'] : '';
-        $query    = isset($url['query']) && $url['query'] ? '?'.$url['query'] : '';
+        $scheme = isset($url['scheme']) ? $url['scheme'].'://' : '';
+        $host = isset($url['host']) ? $url['host'] : '';
+        $port = isset($url['port']) ? ':'.$url['port'] : '';
+        $user = isset($url['user']) ? $url['user'] : '';
+        $pass = isset($url['pass']) ? ':'.$url['pass']  : '';
+        $pass = ($user || $pass) ? "$pass@" : '';
+        $path = isset($url['path']) ? $url['path'] : '';
+        $query = isset($url['query']) && $url['query'] ? '?'.$url['query'] : '';
         $fragment = isset($url['fragment']) ? '#'.$url['fragment'] : '';
 
         return $scheme.$user.$pass.$host.$port.$path.$query.$fragment;

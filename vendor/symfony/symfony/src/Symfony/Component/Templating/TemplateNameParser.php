@@ -18,19 +18,11 @@ namespace Symfony\Component\Templating;
  * and the extension for the engine.
  *
  * @author Fabien Potencier <fabien@symfony.com>
- *
- * @api
  */
 class TemplateNameParser implements TemplateNameParserInterface
 {
     /**
-     * Parses a template to an array of parameters.
-     *
-     * @param string $name A template name
-     *
-     * @return TemplateReferenceInterface A template
-     *
-     * @api
+     * {@inheritdoc}
      */
     public function parse($name)
     {

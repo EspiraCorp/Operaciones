@@ -13,6 +13,19 @@ namespace Symfony\Component\Validator\Mapping;
 
 use Symfony\Component\Validator\Exception\ValidatorException;
 
+/**
+ * Stores all metadata needed for validating a class property.
+ *
+ * The value of the property is obtained by directly accessing the property.
+ * The property will be accessed by reflection, so the access of private and
+ * protected properties is supported.
+ *
+ * This class supports serialization and cloning.
+ *
+ * @author Bernhard Schussek <bschussek@gmail.com>
+ *
+ * @see PropertyMetadataInterface
+ */
 class PropertyMetadata extends MemberMetadata
 {
     /**
@@ -26,7 +39,7 @@ class PropertyMetadata extends MemberMetadata
     public function __construct($class, $name)
     {
         if (!property_exists($class, $name)) {
-            throw new ValidatorException(sprintf('Property %s does not exist in class %s', $name, $class));
+            throw new ValidatorException(sprintf('Property "%s" does not exist in class "%s"', $name, $class));
         }
 
         parent::__construct($class, $name, $name);
@@ -45,12 +58,11 @@ class PropertyMetadata extends MemberMetadata
      */
     protected function newReflectionMember($objectOrClassName)
     {
-        $class = new \ReflectionClass($objectOrClassName);
-        while (!$class->hasProperty($this->getName())) {
-            $class = $class->getParentClass();
+        while (!property_exists($objectOrClassName, $this->getName())) {
+            $objectOrClassName = get_parent_class($objectOrClassName);
         }
 
-        $member = new \ReflectionProperty($class->getName(), $this->getName());
+        $member = new \ReflectionProperty($objectOrClassName, $this->getName());
         $member->setAccessible(true);
 
         return $member;

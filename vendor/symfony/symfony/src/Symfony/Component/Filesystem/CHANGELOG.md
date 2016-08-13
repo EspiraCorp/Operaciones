@@ -1,6 +1,16 @@
 CHANGELOG
 =========
 
+2.8.0
+-----
+
+ * added tempnam() a stream aware version of PHP's native tempnam()
+
+2.6.0
+-----
+
+ * added LockHandler
+
 2.3.12
 ------
 
@@ -10,7 +20,7 @@ CHANGELOG
 -----
 
  * added the dumpFile() method to atomically write files
- 
+
 2.2.0
 -----
 
